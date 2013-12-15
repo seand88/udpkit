@@ -80,7 +80,7 @@ namespace UdpKit {
 #if DEBUG
                 Write(String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
-                write(String.Concat(timePadded(), threadName(), " | warn  | ", String.Format(format, args)));
+                Write(String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args)));
 #endif
             }
         }
@@ -89,7 +89,7 @@ namespace UdpKit {
 #if DEBUG
             Write(String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
-            write(String.Concat(timePadded(), threadName(), " | error | ", String.Format(format, args)));
+            Write(String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args)));
 #endif
         }
 

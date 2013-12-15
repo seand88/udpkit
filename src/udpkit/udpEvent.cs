@@ -57,6 +57,7 @@ namespace UdpKit {
 
         internal const int INTERNAL_START = 1;
         internal const int INTERNAL_CONNECT = 3;
+        internal const int INTERNAL_CONNECT_CANCEL = 17;
         internal const int INTERNAL_ACCEPT = 5;
         internal const int INTERNAL_REFUSE = 7;
         internal const int INTERNAL_DISCONNECT = 9;

@@ -72,7 +72,7 @@ namespace UdpKit {
             this.serializerFactory = serializerFactory;
             this.Config = config.Duplicate();
 
-            random = new Random(500);
+            random = new Random();
             state = udpSocketState.Created;
             receiveBuffer = new byte[config.MtuMax * 2];
             objectBuffer = new byte[config.MtuMax * 2];
@@ -107,6 +107,14 @@ namespace UdpKit {
         /// <param name="endpoint">The endpoint to connect to</param>
         public void Connect (UdpEndPoint endpoint) {
             Raise(UdpEvent.INTERNAL_CONNECT, endpoint);
+        }
+
+        /// <summary>
+        /// Cancel ongoing attempt to connect to endpoint
+        /// </summary>
+        /// <param name="endpoint">The endpoint to cancel connect attempt to</param>
+        public void CancelConnect (UdpEndPoint endpoint) {
+            Raise(UdpEvent.INTERNAL_CONNECT_CANCEL, endpoint);
         }
 
         /// <summary>
@@ -325,6 +333,7 @@ namespace UdpKit {
                 switch (ev.Type) {
                     case UdpEvent.INTERNAL_START: OnEventStart(ev); break;
                     case UdpEvent.INTERNAL_CONNECT: OnEventConnect(ev); break;
+                    case UdpEvent.INTERNAL_CONNECT_CANCEL: OnEventConnectCancel(ev); break;
                     case UdpEvent.INTERNAL_ACCEPT: OnEventAccept(ev); break;
                     case UdpEvent.INTERNAL_REFUSE: OnEventRefuse(ev); break;
                     case UdpEvent.INTERNAL_DISCONNECT: OnEventDisconect(ev); break;
@@ -351,6 +360,22 @@ namespace UdpKit {
 
                 if (cn == null) {
                     UdpLog.Error("could not create connection for endpoint {0}", ev.EndPoint.ToString());
+                }
+            }
+        }
+
+        void OnEventConnectCancel (UdpEvent ev) {
+            if (CheckState(udpSocketState.Running)) {
+                UdpConnection cn;
+
+                if (connLookup.TryGetValue(ev.EndPoint, out cn)) {
+                    if (cn.CheckState(UdpConnectionState.Connecting)) {
+                        // notify user thread
+                        Raise(UdpEvent.PUBLIC_CONNECT_FAILED, ev.EndPoint);
+
+                        // destroy this connection
+                        cn.ChangeState(UdpConnectionState.Destroy);
+                    }
                 }
             }
         }
