@@ -296,15 +296,13 @@ namespace UdpKit {
             return ReadInt(32);
         }
 
-        /*
-        public void wEnum32<T> (T value, int bits) where T : struct {
-            wS32(udpUtils.enumToInt(value), bits);
+        public void WriteEnum32<T> (T value, int bits) where T : struct {
+            WriteInt(UdpUtils.EnumToInt(value), bits);
         }
 
-        public T rEnum32<T> (int bits) where T : struct {
-            return udpUtils.intToEnum<T>(rS32(bits));
+        public T ReadEnum32<T> (int bits) where T : struct {
+            return UdpUtils.IntToEnum<T>(ReadInt(bits));
         }
-        */
 
         public void WriteULong (ulong value, int bits) {
             if (bits <= 32) {
@@ -398,7 +396,7 @@ namespace UdpKit {
             bytes.Byte7 = ReadByte(8);
             return bytes.Float64;
         }
-        
+
         public void WriteByteArray (byte[] from) {
             WriteByteArray(from, 0, from.Length);
         }
@@ -430,7 +428,7 @@ namespace UdpKit {
 
             Ptr += (count * 8);
         }
-        
+
         public void ReadByteArray (byte[] to) {
             ReadByteArray(to, 0, to.Length);
         }
