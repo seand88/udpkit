@@ -47,7 +47,7 @@ namespace UdpKit {
     }
 
     public abstract class UdpSerializer {
-        readonly Queue<object> sendQueue = new Queue<object>();
+        readonly Queue<object> sendQueue = new Queue<object>(32);
 
         internal bool HasQueuedObjects {
             get { return sendQueue.Count > 0; }
