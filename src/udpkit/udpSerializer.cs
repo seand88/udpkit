@@ -27,6 +27,25 @@ using System.Collections.Generic;
 namespace UdpKit {
     public delegate UdpSerializer UdpSerializerFactory ();
 
+    public abstract class UdpSerializer<T> : UdpSerializer {
+        public sealed override bool Pack (ref UdpBitStream stream, ref object o) {
+            T sent;
+            bool result = Pack(ref stream, (T)o, out sent);
+            o = sent;
+            return result;
+        }
+
+        public sealed override bool Unpack (ref UdpBitStream stream, ref object o) {
+            T received;
+            bool result = Unpack(ref stream, out received);
+            o = received;
+            return result;
+        }
+
+        public abstract bool Pack (ref UdpBitStream stream, T input, out T sent);
+        public abstract bool Unpack (ref UdpBitStream stream, out T received);
+    }
+
     public abstract class UdpSerializer {
         readonly Queue<object> sendQueue = new Queue<object>();
 
