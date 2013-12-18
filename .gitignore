@@ -29,3 +29,8 @@ src/udpkit.examples.unity/Library
 src/udpkit.examples.unity/Temp
 src/udpkit.examples.unity/*.sln
 src/udpkit.examples.unity/*.csproj
+src/udpkit.unity.fps/*.sln
+src/udpkit.unity.fps/*.csproj
+src/udpkit.unity.fps/Library
+src/udpkit.unity.fps/Temp
+src/udpkit.unity.fps/Build
