@@ -71,7 +71,7 @@ namespace UdpKit {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
             this.Config = config.Duplicate();
-            
+
             state = udpSocketState.Created;
             random = new Random();
 
@@ -257,7 +257,7 @@ namespace UdpKit {
         }
 
         void SendRefusedCommand (UdpEndPoint endpoint) {
-            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, UdpHeader.GetSize(this));  
+            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, UdpHeader.GetSize(this));
             stream.WriteByte((byte) UdpCommandType.Refused, 8);
 
             UdpHeader header = new UdpHeader();
@@ -329,7 +329,7 @@ namespace UdpKit {
                 frame += 1;
             }
 
-            UdpLog.Info("socket closing");
+            UdpLog.Info("socket closed");
         }
 
         void ProcessIncommingEvents () {
@@ -417,9 +417,23 @@ namespace UdpKit {
 
         void OnEventClose (UdpEvent ev) {
             if (ChangeState(udpSocketState.Running, udpSocketState.Shutdown)) {
+                for (int i = 0; i < connList.Count; ++i) {
+                    UdpConnection cn = connList[i];
+                    cn.SendCommand(UdpCommandType.Disconnected);
+                    cn.ChangeState(UdpConnectionState.Disconnected);
+                }
+
                 if (platform.Close() == false) {
                     UdpLog.Error("failed to shutdown socket interface, platform code: {0}", platform.PlatformError.ToString());
                 }
+
+                connList.Clear();
+                connLookup.Clear();
+                eventQueueIn.Clear();
+                pendingConnections.Clear();
+                
+                GetReadStream().Data = null;
+                GetWriteStream(0, 0).Data = null;
             }
         }
 

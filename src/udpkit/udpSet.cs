@@ -34,6 +34,10 @@ namespace UdpKit {
             return set.Remove(value);
         }
 
+        public void Clear () {
+            set.Clear();
+        }
+
 #if HAS_HASHSET
         readonly HashSet<T> set;
 

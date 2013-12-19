@@ -33,7 +33,7 @@ namespace UdpKit {
     public class UdpStream {
         internal int Ptr;
         internal int Length;
-        internal readonly byte[] Data;
+        internal byte[] Data;
 
         public bool Done {
             get { return Ptr == Length; }
