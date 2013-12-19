@@ -79,7 +79,7 @@ namespace UdpKit.stresstest {
     }
 
     class Serializer : UdpSerializer {
-        public override bool Pack (ref UdpBitStream buffer, ref object o) {
+        public override bool Pack (UdpStream buffer, ref object o) {
             pair p = (pair) o;
             buffer.WriteUInt(p.seq, 32);
             buffer.WriteUInt(p.val, 32);
@@ -88,7 +88,7 @@ namespace UdpKit.stresstest {
             return true;
         }
 
-        public override bool Unpack (ref UdpBitStream buffer, ref object o) {
+        public override bool Unpack (UdpStream buffer, ref object o) {
             pair p = new pair();
             p.seq = buffer.ReadUInt(32);
             p.val = buffer.ReadUInt(32);

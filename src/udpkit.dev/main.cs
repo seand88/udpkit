@@ -32,12 +32,12 @@ namespace udpkitdev {
         static Thread clientThread;
 
         class Serializer : UdpSerializer {
-            public override bool Pack (ref UdpBitStream buffer, ref object o) {
+            public override bool Pack (UdpStream buffer, ref object o) {
                 buffer.WriteUInt((uint) o, 32);
                 return true;
             }
 
-            public override bool Unpack (ref UdpBitStream buffer, ref object o) {
+            public override bool Unpack (UdpStream buffer, ref object o) {
                 o = buffer.ReadUInt(32);
                 return true;
             }

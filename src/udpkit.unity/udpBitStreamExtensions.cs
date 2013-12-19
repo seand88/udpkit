@@ -26,249 +26,249 @@ using UnityEngine;
 
 namespace UdpKit {
     public static class UdpBitStreamExt {
-        public static void WriteColor32RGBA (ref UdpBitStream stream, Color32 value) {
+        public static void WriteColor32RGBA (this UdpStream stream, Color32 value) {
             stream.WriteByte(value.r, 8);
             stream.WriteByte(value.g, 8);
             stream.WriteByte(value.b, 8);
             stream.WriteByte(value.a, 8);
         }
 
-        public static Color32 ReadColor32RGBA (ref UdpBitStream stream) {
+        public static Color32 ReadColor32RGBA (this UdpStream stream) {
             return new Color32(stream.ReadByte(8), stream.ReadByte(8), stream.ReadByte(8), stream.ReadByte(8));
         }
 
-        public static void WriteColor32RGB (ref UdpBitStream stream, Color32 value) {
+        public static void WriteColor32RGB (this UdpStream stream, Color32 value) {
             stream.WriteByte(value.r, 8);
             stream.WriteByte(value.g, 8);
             stream.WriteByte(value.b, 8);
         }
 
-        public static Color32 ReadColor32RGB (ref UdpBitStream stream) {
+        public static Color32 ReadColor32RGB (this UdpStream stream) {
             return new Color32(stream.ReadByte(8), stream.ReadByte(8), stream.ReadByte(8), 0xFF);
         }
 
-        public static void WriteVector2 (ref UdpBitStream stream, Vector2 value) {
+        public static void WriteVector2 (this UdpStream stream, Vector2 value) {
             stream.WriteFloat(value.x);
             stream.WriteFloat(value.y);
         }
 
-        public static Vector2 ReadVector2 (ref UdpBitStream stream) {
+        public static Vector2 ReadVector2 (this UdpStream stream) {
             return new Vector2(stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteVector2Half (ref UdpBitStream stream, Vector2 value) {
+        public static void WriteVector2Half (this UdpStream stream, Vector2 value) {
             stream.WriteHalf(value.x);
             stream.WriteHalf(value.y);
         }
 
-        public static Vector2 ReadVector2Half (ref UdpBitStream stream) {
+        public static Vector2 ReadVector2Half (this UdpStream stream) {
             return new Vector2(stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteVector3 (ref UdpBitStream stream, Vector3 value) {
+        public static void WriteVector3 (this UdpStream stream, Vector3 value) {
             stream.WriteFloat(value.x);
             stream.WriteFloat(value.y);
             stream.WriteFloat(value.z);
         }
 
-        public static Vector3 ReadVector3 (ref UdpBitStream stream) {
+        public static Vector3 ReadVector3 (this UdpStream stream) {
             return new Vector3(stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteVector3Half (ref UdpBitStream stream, Vector3 value) {
+        public static void WriteVector3Half (this UdpStream stream, Vector3 value) {
             stream.WriteHalf(value.x);
             stream.WriteHalf(value.y);
             stream.WriteHalf(value.z);
         }
 
-        public static Vector3 ReadVector3Half (ref UdpBitStream stream) {
+        public static Vector3 ReadVector3Half (this UdpStream stream) {
             return new Vector3(stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteColorRGB (ref UdpBitStream stream, Color value) {
+        public static void WriteColorRGB (this UdpStream stream, Color value) {
             stream.WriteFloat(value.r);
             stream.WriteFloat(value.g);
             stream.WriteFloat(value.b);
         }
 
-        public static Color ReadColorRGB (ref UdpBitStream stream) {
+        public static Color ReadColorRGB (this UdpStream stream) {
             return new Color(stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteColorRGBHalf (ref UdpBitStream stream, Color value) {
+        public static void WriteColorRGBHalf (this UdpStream stream, Color value) {
             stream.WriteHalf(value.r);
             stream.WriteHalf(value.g);
             stream.WriteHalf(value.b);
         }
 
-        public static Color ReadColorRGBHalf (ref UdpBitStream stream) {
+        public static Color ReadColorRGBHalf (this UdpStream stream) {
             return new Color(stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteVector4 (ref UdpBitStream stream, Vector4 value) {
+        public static void WriteVector4 (this UdpStream stream, Vector4 value) {
             stream.WriteFloat(value.x);
             stream.WriteFloat(value.y);
             stream.WriteFloat(value.z);
             stream.WriteFloat(value.w);
         }
 
-        public static Vector4 ReadVector4 (ref UdpBitStream stream) {
+        public static Vector4 ReadVector4 (this UdpStream stream) {
             return new Vector4(stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteVector4Half (ref UdpBitStream stream, Vector4 value) {
+        public static void WriteVector4Half (this UdpStream stream, Vector4 value) {
             stream.WriteHalf(value.x);
             stream.WriteHalf(value.y);
             stream.WriteHalf(value.z);
             stream.WriteHalf(value.w);
         }
 
-        public static Vector4 ReadVector4Half (ref UdpBitStream stream) {
+        public static Vector4 ReadVector4Half (this UdpStream stream) {
             return new Vector4(stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteColorRGBA (ref UdpBitStream stream, Color value) {
+        public static void WriteColorRGBA (this UdpStream stream, Color value) {
             stream.WriteFloat(value.r);
             stream.WriteFloat(value.g);
             stream.WriteFloat(value.b);
             stream.WriteFloat(value.a);
         }
 
-        public static Color ReadColorRGBA (ref UdpBitStream stream) {
+        public static Color ReadColorRGBA (this UdpStream stream) {
             return new Color(stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteColorRGBAHalf (ref UdpBitStream stream, Color value) {
+        public static void WriteColorRGBAHalf (this UdpStream stream, Color value) {
             stream.WriteHalf(value.r);
             stream.WriteHalf(value.g);
             stream.WriteHalf(value.b);
             stream.WriteHalf(value.a);
         }
 
-        public static Color ReadColorRGBAHalf (ref UdpBitStream stream) {
+        public static Color ReadColorRGBAHalf (this UdpStream stream) {
             return new Color(stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteQuaternion (ref UdpBitStream stream, Quaternion value) {
+        public static void WriteQuaternion (this UdpStream stream, Quaternion value) {
             stream.WriteFloat(value.x);
             stream.WriteFloat(value.y);
             stream.WriteFloat(value.z);
             stream.WriteFloat(value.w);
         }
 
-        public static Quaternion ReadQuaternion (ref UdpBitStream stream) {
+        public static Quaternion ReadQuaternion (this UdpStream stream) {
             return new Quaternion(stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat(), stream.ReadFloat());
         }
 
-        public static void WriteQuaternionHalf (ref UdpBitStream stream, Quaternion value) {
+        public static void WriteQuaternionHalf (this UdpStream stream, Quaternion value) {
             stream.WriteHalf(value.x);
             stream.WriteHalf(value.y);
             stream.WriteHalf(value.z);
             stream.WriteHalf(value.w);
         }
 
-        public static Quaternion ReadQuaternionHalf (ref UdpBitStream stream) {
+        public static Quaternion ReadQuaternionHalf (this UdpStream stream) {
             return new Quaternion(stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf(), stream.ReadHalf());
         }
 
-        public static void WriteTransform (ref UdpBitStream stream, Transform transform) {
-            UdpBitStreamExt.WriteVector3(ref stream, transform.position);
-            UdpBitStreamExt.WriteQuaternion(ref stream, transform.rotation);
+        public static void WriteTransform (this UdpStream stream, Transform transform) {
+            UdpBitStreamExt.WriteVector3(stream, transform.position);
+            UdpBitStreamExt.WriteQuaternion(stream, transform.rotation);
         }
 
-        public static void ReadTransform (ref UdpBitStream stream, Transform transform) {
-            transform.position = UdpBitStreamExt.ReadVector3(ref stream);
-            transform.rotation = UdpBitStreamExt.ReadQuaternion(ref stream);
+        public static void ReadTransform (this UdpStream stream, Transform transform) {
+            transform.position = UdpBitStreamExt.ReadVector3(stream);
+            transform.rotation = UdpBitStreamExt.ReadQuaternion(stream);
         }
 
-        public static void ReadTransform (ref UdpBitStream stream, out Vector3 position, out Quaternion rotation) {
-            position = UdpBitStreamExt.ReadVector3(ref stream);
-            rotation = UdpBitStreamExt.ReadQuaternion(ref stream);
+        public static void ReadTransform (this UdpStream stream, out Vector3 position, out Quaternion rotation) {
+            position = UdpBitStreamExt.ReadVector3(stream);
+            rotation = UdpBitStreamExt.ReadQuaternion(stream);
         }
 
-        public static void WriteTransformHalf (ref UdpBitStream stream, Transform transform) {
-            UdpBitStreamExt.WriteVector3Half(ref stream, transform.position);
-            UdpBitStreamExt.WriteQuaternionHalf(ref stream, transform.rotation);
+        public static void WriteTransformHalf (this UdpStream stream, Transform transform) {
+            UdpBitStreamExt.WriteVector3Half(stream, transform.position);
+            UdpBitStreamExt.WriteQuaternionHalf(stream, transform.rotation);
         }
 
-        public static void ReadTransformHalf (ref UdpBitStream stream, Transform transform) {
-            transform.position = UdpBitStreamExt.ReadVector3Half(ref stream);
-            transform.rotation = UdpBitStreamExt.ReadQuaternionHalf(ref stream);
+        public static void ReadTransformHalf (this UdpStream stream, Transform transform) {
+            transform.position = UdpBitStreamExt.ReadVector3Half(stream);
+            transform.rotation = UdpBitStreamExt.ReadQuaternionHalf(stream);
         }
 
-        public static void ReadTransformHalf (ref UdpBitStream stream, out Vector3 position, out Quaternion rotation) {
-            position = UdpBitStreamExt.ReadVector3Half(ref stream);
-            rotation = UdpBitStreamExt.ReadQuaternionHalf(ref stream);
+        public static void ReadTransformHalf (this UdpStream stream, out Vector3 position, out Quaternion rotation) {
+            position = UdpBitStreamExt.ReadVector3Half(stream);
+            rotation = UdpBitStreamExt.ReadQuaternionHalf(stream);
         }
 
-        public static void WriteRigidbody (ref UdpBitStream stream, Rigidbody rigidbody) {
-            UdpBitStreamExt.WriteVector3(ref stream, rigidbody.position);
-            UdpBitStreamExt.WriteQuaternion(ref stream, rigidbody.rotation);
-            UdpBitStreamExt.WriteVector3(ref stream, rigidbody.velocity);
-            UdpBitStreamExt.WriteVector3(ref stream, rigidbody.angularVelocity);
+        public static void WriteRigidbody (this UdpStream stream, Rigidbody rigidbody) {
+            UdpBitStreamExt.WriteVector3(stream, rigidbody.position);
+            UdpBitStreamExt.WriteQuaternion(stream, rigidbody.rotation);
+            UdpBitStreamExt.WriteVector3(stream, rigidbody.velocity);
+            UdpBitStreamExt.WriteVector3(stream, rigidbody.angularVelocity);
         }
 
-        public static void ReadRigidbody (ref UdpBitStream stream, Rigidbody rigidbody) {
-            rigidbody.position = UdpBitStreamExt.ReadVector3(ref stream);
-            rigidbody.rotation = UdpBitStreamExt.ReadQuaternion(ref stream);
-            rigidbody.velocity = UdpBitStreamExt.ReadVector3(ref stream);
-            rigidbody.angularVelocity = UdpBitStreamExt.ReadVector3(ref stream);
+        public static void ReadRigidbody (this UdpStream stream, Rigidbody rigidbody) {
+            rigidbody.position = UdpBitStreamExt.ReadVector3(stream);
+            rigidbody.rotation = UdpBitStreamExt.ReadQuaternion(stream);
+            rigidbody.velocity = UdpBitStreamExt.ReadVector3(stream);
+            rigidbody.angularVelocity = UdpBitStreamExt.ReadVector3(stream);
         }
 
-        public static void ReadRigidbody (ref UdpBitStream stream, out Vector3 position, out Quaternion rotation, out Vector3 velocity, out Vector3 angularVelocity) {
-            position = UdpBitStreamExt.ReadVector3(ref stream);
-            rotation = UdpBitStreamExt.ReadQuaternion(ref stream);
-            velocity = UdpBitStreamExt.ReadVector3(ref stream);
-            angularVelocity = UdpBitStreamExt.ReadVector3(ref stream);
+        public static void ReadRigidbody (this UdpStream stream, out Vector3 position, out Quaternion rotation, out Vector3 velocity, out Vector3 angularVelocity) {
+            position = UdpBitStreamExt.ReadVector3(stream);
+            rotation = UdpBitStreamExt.ReadQuaternion(stream);
+            velocity = UdpBitStreamExt.ReadVector3(stream);
+            angularVelocity = UdpBitStreamExt.ReadVector3(stream);
         }
 
-        public static void WriteRigidbodyHalf (ref UdpBitStream stream, Rigidbody rigidbody) {
-            UdpBitStreamExt.WriteVector3Half(ref stream, rigidbody.position);
-            UdpBitStreamExt.WriteQuaternionHalf(ref stream, rigidbody.rotation);
-            UdpBitStreamExt.WriteVector3Half(ref stream, rigidbody.velocity);
-            UdpBitStreamExt.WriteVector3Half(ref stream, rigidbody.angularVelocity);
+        public static void WriteRigidbodyHalf (this UdpStream stream, Rigidbody rigidbody) {
+            UdpBitStreamExt.WriteVector3Half(stream, rigidbody.position);
+            UdpBitStreamExt.WriteQuaternionHalf(stream, rigidbody.rotation);
+            UdpBitStreamExt.WriteVector3Half(stream, rigidbody.velocity);
+            UdpBitStreamExt.WriteVector3Half(stream, rigidbody.angularVelocity);
         }
 
-        public static void ReadRigidbodyHalf (ref UdpBitStream stream, Rigidbody rigidbody) {
-            rigidbody.position = UdpBitStreamExt.ReadVector3Half(ref stream);
-            rigidbody.rotation = UdpBitStreamExt.ReadQuaternionHalf(ref stream);
-            rigidbody.velocity = UdpBitStreamExt.ReadVector3Half(ref stream);
-            rigidbody.angularVelocity = UdpBitStreamExt.ReadVector3Half(ref stream);
+        public static void ReadRigidbodyHalf (this UdpStream stream, Rigidbody rigidbody) {
+            rigidbody.position = UdpBitStreamExt.ReadVector3Half(stream);
+            rigidbody.rotation = UdpBitStreamExt.ReadQuaternionHalf(stream);
+            rigidbody.velocity = UdpBitStreamExt.ReadVector3Half(stream);
+            rigidbody.angularVelocity = UdpBitStreamExt.ReadVector3Half(stream);
         }
 
-        public static void ReadRigidbodyHalf (ref UdpBitStream stream, out Vector3 position, out Quaternion rotation, out Vector3 velocity, out Vector3 angularVelocity) {
-            position = UdpBitStreamExt.ReadVector3Half(ref stream);
-            rotation = UdpBitStreamExt.ReadQuaternionHalf(ref stream);
-            velocity = UdpBitStreamExt.ReadVector3Half(ref stream);
-            angularVelocity = UdpBitStreamExt.ReadVector3Half(ref stream);
+        public static void ReadRigidbodyHalf (this UdpStream stream, out Vector3 position, out Quaternion rotation, out Vector3 velocity, out Vector3 angularVelocity) {
+            position = UdpBitStreamExt.ReadVector3Half(stream);
+            rotation = UdpBitStreamExt.ReadQuaternionHalf(stream);
+            velocity = UdpBitStreamExt.ReadVector3Half(stream);
+            angularVelocity = UdpBitStreamExt.ReadVector3Half(stream);
         }
 
-        public static void WriteBounds (ref UdpBitStream stream, Bounds b) {
-            UdpBitStreamExt.WriteVector3(ref stream, b.center);
-            UdpBitStreamExt.WriteVector3(ref stream, b.size);
+        public static void WriteBounds (this UdpStream stream, Bounds b) {
+            UdpBitStreamExt.WriteVector3(stream, b.center);
+            UdpBitStreamExt.WriteVector3(stream, b.size);
         }
 
-        public static Bounds ReadBounds (ref UdpBitStream stream) {
-            return new Bounds(UdpBitStreamExt.ReadVector3(ref stream), UdpBitStreamExt.ReadVector3(ref stream));
+        public static Bounds ReadBounds (this UdpStream stream) {
+            return new Bounds(UdpBitStreamExt.ReadVector3(stream), UdpBitStreamExt.ReadVector3(stream));
         }
 
-        public static void WriteBoundsHalf (ref UdpBitStream stream, Bounds b) {
-            UdpBitStreamExt.WriteVector3Half(ref stream, b.center);
-            UdpBitStreamExt.WriteVector3Half(ref stream, b.size);
+        public static void WriteBoundsHalf (this UdpStream stream, Bounds b) {
+            UdpBitStreamExt.WriteVector3Half(stream, b.center);
+            UdpBitStreamExt.WriteVector3Half(stream, b.size);
         }
 
-        public static Bounds ReadBoundsHalf (ref UdpBitStream stream) {
-            return new Bounds(UdpBitStreamExt.ReadVector3Half(ref stream), UdpBitStreamExt.ReadVector3Half(ref stream));
+        public static Bounds ReadBoundsHalf (this UdpStream stream) {
+            return new Bounds(UdpBitStreamExt.ReadVector3Half(stream), UdpBitStreamExt.ReadVector3Half(stream));
         }
 
-        public static void WriteRect (ref UdpBitStream stream, Rect rect) {
+        public static void WriteRect (this UdpStream stream, Rect rect) {
             stream.WriteFloat(rect.xMin);
             stream.WriteFloat(rect.yMin);
             stream.WriteFloat(rect.width);
             stream.WriteFloat(rect.height);
         }
 
-        public static Rect ReadRect (ref UdpBitStream stream) {
+        public static Rect ReadRect (this UdpStream stream) {
             return new Rect(
                 stream.ReadFloat(),
                 stream.ReadFloat(),
@@ -277,14 +277,14 @@ namespace UdpKit {
             );
         }
 
-        public static void WriteRectHalf (ref UdpBitStream stream, Rect rect) {
+        public static void WriteRectHalf (this UdpStream stream, Rect rect) {
             stream.WriteHalf(rect.xMin);
             stream.WriteHalf(rect.yMin);
             stream.WriteHalf(rect.width);
             stream.WriteHalf(rect.height);
         }
 
-        public static Rect ReadRectHalf (ref UdpBitStream stream) {
+        public static Rect ReadRectHalf (this UdpStream stream) {
             return new Rect(
                 stream.ReadHalf(),
                 stream.ReadHalf(),
@@ -293,63 +293,63 @@ namespace UdpKit {
             );
         }
 
-        public static void WriteRay (ref UdpBitStream stream, Ray ray) {
-            UdpBitStreamExt.WriteVector3(ref stream, ray.origin);
-            UdpBitStreamExt.WriteVector3(ref stream, ray.direction);
+        public static void WriteRay (this UdpStream stream, Ray ray) {
+            UdpBitStreamExt.WriteVector3(stream, ray.origin);
+            UdpBitStreamExt.WriteVector3(stream, ray.direction);
         }
 
-        public static Ray ReadRay (ref UdpBitStream stream) {
+        public static Ray ReadRay (this UdpStream stream) {
             return new Ray(
-                UdpBitStreamExt.ReadVector3(ref stream),
-                UdpBitStreamExt.ReadVector3(ref stream)
+                UdpBitStreamExt.ReadVector3(stream),
+                UdpBitStreamExt.ReadVector3(stream)
             );
         }
 
-        public static void WriteRayHalf (ref UdpBitStream stream, Ray ray) {
-            UdpBitStreamExt.WriteVector3Half(ref stream, ray.origin);
-            UdpBitStreamExt.WriteVector3Half(ref stream, ray.direction);
+        public static void WriteRayHalf (this UdpStream stream, Ray ray) {
+            UdpBitStreamExt.WriteVector3Half(stream, ray.origin);
+            UdpBitStreamExt.WriteVector3Half(stream, ray.direction);
         }
 
-        public static Ray ReadRayHalf (ref UdpBitStream stream) {
+        public static Ray ReadRayHalf (this UdpStream stream) {
             return new Ray(
-                UdpBitStreamExt.ReadVector3Half(ref stream),
-                UdpBitStreamExt.ReadVector3Half(ref stream)
+                UdpBitStreamExt.ReadVector3Half(stream),
+                UdpBitStreamExt.ReadVector3Half(stream)
             );
         }
 
-        public static void WritePlane (ref UdpBitStream stream, Plane plane) {
-            UdpBitStreamExt.WriteVector3(ref stream, plane.normal);
+        public static void WritePlane (this UdpStream stream, Plane plane) {
+            UdpBitStreamExt.WriteVector3(stream, plane.normal);
             stream.WriteFloat(plane.distance);
         }
 
-        public static Plane ReadPlane (ref UdpBitStream stream) {
+        public static Plane ReadPlane (this UdpStream stream) {
             return new Plane(
-                UdpBitStreamExt.ReadVector3(ref stream),
+                UdpBitStreamExt.ReadVector3(stream),
                 stream.ReadFloat()
             );
         }
 
-        public static void WritePlaneHalf (ref UdpBitStream stream, Plane plane) {
-            UdpBitStreamExt.WriteVector3Half(ref stream, plane.normal);
+        public static void WritePlaneHalf (this UdpStream stream, Plane plane) {
+            UdpBitStreamExt.WriteVector3Half(stream, plane.normal);
             stream.WriteHalf(plane.distance);
         }
 
-        public static Plane ReadPlaneHalf (ref UdpBitStream stream) {
+        public static Plane ReadPlaneHalf (this UdpStream stream) {
             return new Plane(
-                UdpBitStreamExt.ReadVector3Half(ref stream),
+                UdpBitStreamExt.ReadVector3Half(stream),
                 stream.ReadHalf()
             );
         }
 
-        public static void WriteLayerMask (ref UdpBitStream stream, LayerMask mask) {
+        public static void WriteLayerMask (this UdpStream stream, LayerMask mask) {
             stream.WriteInt(mask.value, 32);
         }
 
-        public static LayerMask ReadLayerMask (ref UdpBitStream stream) {
+        public static LayerMask ReadLayerMask (this UdpStream stream) {
             return stream.ReadInt(32);
         }
 
-        public static void WriteMatrix4x4 (ref UdpBitStream stream, ref Matrix4x4 m) {
+        public static void WriteMatrix4x4 (this UdpStream stream, ref Matrix4x4 m) {
             stream.WriteFloat(m.m00);
             stream.WriteFloat(m.m01);
             stream.WriteFloat(m.m02);
@@ -368,7 +368,7 @@ namespace UdpKit {
             stream.WriteFloat(m.m33);
         }
 
-        public static Matrix4x4 ReadMatrix4x4 (ref UdpBitStream stream) {
+        public static Matrix4x4 ReadMatrix4x4 (this UdpStream stream) {
             Matrix4x4 m = default(Matrix4x4);
             m.m00 = stream.ReadFloat();
             m.m01 = stream.ReadFloat();
@@ -389,7 +389,7 @@ namespace UdpKit {
             return m;
         }
 
-        public static void WriteMatrix4x4Half (ref UdpBitStream stream, ref Matrix4x4 m) {
+        public static void WriteMatrix4x4Half (this UdpStream stream, ref Matrix4x4 m) {
             stream.WriteHalf(m.m00);
             stream.WriteHalf(m.m01);
             stream.WriteHalf(m.m02);
@@ -408,7 +408,7 @@ namespace UdpKit {
             stream.WriteHalf(m.m33);
         }
 
-        public static Matrix4x4 ReadMatrix4x4Half (ref UdpBitStream stream) {
+        public static Matrix4x4 ReadMatrix4x4Half (this UdpStream stream) {
             Matrix4x4 m = default(Matrix4x4);
             m.m00 = stream.ReadHalf();
             m.m01 = stream.ReadHalf();

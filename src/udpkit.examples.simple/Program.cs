@@ -7,11 +7,11 @@ using UdpKit;
 
 namespace UdpKit.Examples.Simple {
     class DummySerializer : UdpSerializer {
-        public override bool Pack (ref UdpBitStream stream, ref object o) {
+        public override bool Pack (UdpStream stream, ref object o) {
             throw new NotImplementedException();
         }
 
-        public override bool Unpack (ref UdpBitStream stream, ref object o) {
+        public override bool Unpack (UdpStream stream, ref object o) {
             throw new NotImplementedException();
         }
     }

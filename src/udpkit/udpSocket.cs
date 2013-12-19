@@ -43,9 +43,9 @@ namespace UdpKit {
 
         readonly Random random;
         readonly Thread threadSocket;
-        readonly byte[] objectBuffer;
-        readonly byte[] receiveBuffer;
         readonly UdpPlatform platform;
+        readonly UdpStream readStream;
+        readonly UdpStream writeStream;
         readonly Queue<UdpEvent> eventQueueIn;
         readonly Queue<UdpEvent> eventQueueOut;
         readonly UdpSerializerFactory serializerFactory;
@@ -71,11 +71,12 @@ namespace UdpKit {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
             this.Config = config.Duplicate();
-
-            random = new Random();
+            
             state = udpSocketState.Created;
-            receiveBuffer = new byte[config.MtuMax * 2];
-            objectBuffer = new byte[config.MtuMax * 2];
+            random = new Random();
+
+            readStream = new UdpStream(new byte[config.MtuMax * 2]);
+            writeStream = new UdpStream(new byte[config.MtuMax * 2]);
 
             eventQueueIn = new Queue<UdpEvent>(config.InitialEventQueueSize);
             eventQueueOut = new Queue<UdpEvent>(config.InitialEventQueueSize);
@@ -219,9 +220,24 @@ namespace UdpKit {
             return serializerFactory();
         }
 
-        internal byte[] GetWriteBuffer () {
-            Array.Clear(objectBuffer, 0, objectBuffer.Length);
-            return objectBuffer;
+        internal UdpStream GetReadStream () {
+            // clear data buffer every time
+            Array.Clear(readStream.Data, 0, readStream.Data.Length);
+
+            readStream.Ptr = 0;
+            readStream.Length = 0;
+
+            return readStream;
+        }
+
+        internal UdpStream GetWriteStream (int length, int offset) {
+            // clear data buffer every time
+            Array.Clear(writeStream.Data, 0, writeStream.Data.Length);
+
+            writeStream.Ptr = offset;
+            writeStream.Length = length;
+
+            return writeStream;
         }
 
         internal uint GetCurrentTime () {
@@ -241,7 +257,7 @@ namespace UdpKit {
         }
 
         void SendRefusedCommand (UdpEndPoint endpoint) {
-            UdpBitStream stream = new UdpBitStream(GetWriteBuffer(), Config.DefaultMtu, UdpHeader.GetSize(this));
+            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, UdpHeader.GetSize(this));  
             stream.WriteByte((byte) UdpCommandType.Refused, 8);
 
             UdpHeader header = new UdpHeader();
@@ -250,7 +266,7 @@ namespace UdpKit {
             header.AckSequence = 1;
             header.ObjSequence = 1;
             header.Now = 0;
-            header.Pack(new UdpBitStream(stream.Data, Config.DefaultMtu, 0), this);
+            header.Pack(stream, this);
 
             if (Send(endpoint, stream.Data, UdpMath.BytesRequired(stream.Ptr)) == false) {
                 // do something here?
@@ -454,8 +470,11 @@ namespace UdpKit {
             if (platform.RecvPoll(1)) {
                 int byteReceived = 0;
                 UdpEndPoint ep = UdpEndPoint.Any;
+                UdpStream stream = GetReadStream();
 
-                if (platform.RecvFrom(receiveBuffer, receiveBuffer.Length, ref byteReceived, ref ep)) {
+                if (platform.RecvFrom(stream.Data, stream.Data.Length, ref byteReceived, ref ep)) {
+                    // set stream length to bits received
+                    stream.Length = byteReceived << 3;
 #if DEBUG
                     if (random.NextDouble() < Config.SimulatedLoss) {
                         UdpLog.Info("simulated loss of packet from {0}", ep.ToString());
@@ -465,18 +484,22 @@ namespace UdpKit {
                     UdpConnection cn;
 
                     if (connLookup.TryGetValue(ep, out cn)) {
-                        cn.OnPacket(new UdpBitStream(receiveBuffer, byteReceived));
+                        cn.OnPacket(stream);
                     } else {
-                        RecvUnconnectedPacket(new UdpBitStream(receiveBuffer, byteReceived), ep);
+                        RecvUnconnectedPacket(stream, ep);
                     }
                 }
             }
         }
 
-        void RecvUnconnectedPacket (UdpBitStream buff, UdpEndPoint ep) {
-            buff.Ptr = UdpHeader.GetSize(this);
+        void RecvUnconnectedPacket (UdpStream buffer, UdpEndPoint ep) {
+            // make sure we always start at zero
+            UdpAssert.Assert(buffer.Ptr == 0);
 
-            if (buff.ReadByte(8) == (byte) UdpCommandType.Connect) {
+            // 
+            buffer.Ptr = UdpHeader.GetSize(this);
+
+            if (buffer.ReadByte(8) == (byte) UdpCommandType.Connect) {
                 if (Config.AllowIncommingConnections && ((connLookup.Count + pendingConnections.Count) < Config.ConnectionLimit || Config.ConnectionLimit == -1)) {
                     if (Config.AutoAcceptIncommingConnections) {
                         AcceptConnection(ep);

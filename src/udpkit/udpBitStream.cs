@@ -30,7 +30,7 @@ namespace UdpKit {
         internal UdpBitPosition (int p) { Ptr = p; }
     }
 
-    public struct UdpBitStream {
+    public class UdpStream {
         internal int Ptr;
         internal int Length;
         internal readonly byte[] Data;
@@ -43,13 +43,16 @@ namespace UdpKit {
             get { return Ptr > Length; }
         }
 
-        internal UdpBitStream (byte[] arr, int size) {
-            Ptr = 0;
-            Data = arr;
-            Length = size << 3;
+        internal UdpStream (byte[] arr)
+            : this(arr, arr.Length) {
+
         }
 
-        internal UdpBitStream (byte[] arr, int size, int offset) {
+        internal UdpStream (byte[] arr, int size)
+            : this(arr, size, 0) {
+        }
+
+        internal UdpStream (byte[] arr, int size, int offset) {
             Ptr = offset;
             Data = arr;
             Length = size << 3;

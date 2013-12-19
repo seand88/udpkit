@@ -269,7 +269,7 @@ namespace UdpKit {
             }
         }
 
-        internal void OnPacket (UdpBitStream buffer) {
+        internal void OnPacket (UdpStream buffer) {
             recvTime = socket.GetCurrentTime();
 
             if ((buffer.Data[0] & 1) == 1) {
@@ -279,8 +279,8 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandReceived (UdpBitStream buffer) {
-            if (ParseHeader(ref buffer)) {
+        void OnCommandReceived (UdpStream buffer) {
+            if (ParseHeader(buffer)) {
                 stats.CommandsReceived += 1;
 
                 buffer.Ptr = UdpHeader.GetSize(socket);
@@ -315,10 +315,10 @@ namespace UdpKit {
                     break;
                 }
 
-                UdpBitStream stream = new UdpBitStream(socket.GetWriteBuffer(), mtu, UdpHeader.GetSize(socket));
+                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpHeader.GetSize(socket));
                 object obj = serializer.NextObject();
 
-                if (serializer.Pack(ref stream, ref obj)) {
+                if (serializer.Pack(stream, ref obj)) {
                     if (stream.Overflowing && (socket.Config.AllowPacketOverflow == false)) {
                         UdpLog.Error("stream to {0} is overflowing, not sending", endpoint.ToString());
                         socket.Raise(UdpEvent.PUBLIC_OBJECT_SEND_FAILED, this, obj, UdpSendFailReason.StreamOverflow);
@@ -326,7 +326,7 @@ namespace UdpKit {
                     }
 
                     UdpHeader header = MakeHeader(true);
-                    header.Pack(new UdpBitStream(stream.Data, mtu, 0), socket);
+                    header.Pack(stream, socket);
 
                     UdpHandle handle = MakeHandle(ref header);
                     handle.Object = obj;
@@ -344,11 +344,11 @@ namespace UdpKit {
 
         internal void SendCommand (UdpCommandType cmd) {
             if (CheckCanSend(true) == UdpSendFailReason.None) {
-                UdpBitStream stream = new UdpBitStream(socket.GetWriteBuffer(), mtu, UdpHeader.GetSize(socket));
+                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpHeader.GetSize(socket));
                 stream.WriteByte((byte) cmd, 8);
 
                 UdpHeader header = MakeHeader(false);
-                header.Pack(new UdpBitStream(stream.Data, mtu, 0), socket);
+                header.Pack(stream, socket);
 
                 UdpHandle handle = MakeHandle(ref header);
                 handle.Object = null;
@@ -361,7 +361,7 @@ namespace UdpKit {
             }
         }
 
-        bool SendStream (UdpBitStream stream, UdpHandle handle, bool expandToMtu) {
+        bool SendStream (UdpStream stream, UdpHandle handle, bool expandToMtu) {
             int bytesToSend = UdpMath.BytesRequired(stream.Ptr);
             if (bytesToSend < mtu && expandToMtu) {
                 bytesToSend = mtu;
@@ -414,9 +414,15 @@ namespace UdpKit {
             return UdpSendFailReason.None;
         }
 
-        bool ParseHeader (ref UdpBitStream buffer) {
+        bool ParseHeader (UdpStream buffer) {
+            // we should always start at ptr 0
+            UdpAssert.Assert(buffer.Ptr == 0);
+
             UdpHeader header = new UdpHeader();
-            header.Unpack(new UdpBitStream(buffer.Data, buffer.Length, 0), socket);
+            header.Unpack(buffer, socket);
+
+            // after unpacking the header, the pointer should be at the header size
+            UdpAssert.Assert(buffer.Ptr == UdpHeader.GetSize(socket));
 
             // Assign bit size
             if (socket.Config.WritePacketBitSize) {
@@ -452,17 +458,17 @@ namespace UdpKit {
             return true;
         }
 
-        void OnObjectReceived (UdpBitStream buffer) {
+        void OnObjectReceived (UdpStream buffer) {
             EnsureClientIsConnected();
 
             if (CheckState(UdpConnectionState.Connected) == false)
                 return;
 
-            if (ParseHeader(ref buffer)) {
+            if (ParseHeader(buffer)) {
                 object obj = null;
                 buffer.Ptr = UdpHeader.GetSize(socket);
 
-                if (serializer.Unpack(ref buffer, ref obj)) {
+                if (serializer.Unpack(buffer, ref obj)) {
                     socket.Raise(UdpEvent.PUBLIC_OBJECT_RECEIVED, this, obj);
                 }
 
@@ -494,7 +500,7 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandConnect (UdpBitStream buffer) {
+        void OnCommandConnect (UdpStream buffer) {
             if (IsServer) {
                 if (CheckState(UdpConnectionState.Connected)) {
                     SendCommand(UdpCommandType.Accepted);
@@ -504,7 +510,7 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandAccepted (UdpBitStream buffer) {
+        void OnCommandAccepted (UdpStream buffer) {
             if (IsClient) {
                 if (CheckState(UdpConnectionState.Connecting)) {
                     ChangeState(UdpConnectionState.Connected);
@@ -514,7 +520,7 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandRefused (UdpBitStream buffer) {
+        void OnCommandRefused (UdpStream buffer) {
             if (IsClient) {
                 if (CheckState(UdpConnectionState.Connecting)) {
                     socket.Raise(UdpEvent.PUBLIC_CONNECT_REFUSED, endpoint);
@@ -527,7 +533,7 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandDisconnected (UdpBitStream buffer) {
+        void OnCommandDisconnected (UdpStream buffer) {
             EnsureClientIsConnected();
 
             if (CheckState(UdpConnectionState.Connected)) {
@@ -535,7 +541,7 @@ namespace UdpKit {
             }
         }
 
-        void OnCommandPing (UdpBitStream buffer) {
+        void OnCommandPing (UdpStream buffer) {
             EnsureClientIsConnected();
         }
 

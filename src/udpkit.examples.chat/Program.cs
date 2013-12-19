@@ -8,7 +8,7 @@ using UdpKit;
 namespace UdpKit.Examples.Chat {
 
     class ChatSerializer : UdpSerializer {
-        public override bool Pack (ref UdpBitStream stream, ref object o) {
+        public override bool Pack (UdpStream stream, ref object o) {
             // cast to string and get bytes
             string msg = (string) o;
             byte[] bytes = Encoding.UTF8.GetBytes(msg);
@@ -20,7 +20,7 @@ namespace UdpKit.Examples.Chat {
             return true;
         }
 
-        public override bool Unpack (ref UdpBitStream stream, ref object o) {
+        public override bool Unpack (UdpStream stream, ref object o) {
             // read length and create array, then read bytes into array
             byte[] bytes = new byte[stream.ReadInt()];
             stream.ReadByteArray(bytes);
