@@ -315,21 +315,25 @@ namespace UdpKit {
         }
 
         void NetworkLoop () {
-            UdpLog.Info("socket created");
-            while (state == udpSocketState.Created) {
-                ProcessIncommingEvents();
-                Thread.Sleep(1);
-            }
+            try {
+                UdpLog.Info("socket created");
+                while (state == udpSocketState.Created) {
+                    ProcessIncommingEvents();
+                    Thread.Sleep(1);
+                }
 
-            UdpLog.Info("socket started");
-            while (state == udpSocketState.Running) {
-                RecvNetworkData();
-                ProcessTimeouts();
-                ProcessIncommingEvents();
-                frame += 1;
-            }
+                UdpLog.Info("socket started");
+                while (state == udpSocketState.Running) {
+                    RecvNetworkData();
+                    ProcessTimeouts();
+                    ProcessIncommingEvents();
+                    frame += 1;
+                }
 
-            UdpLog.Info("socket closed");
+                UdpLog.Info("socket closed");
+            } catch (Exception exn) {
+                UdpLog.Error(exn.ToString());
+            }
         }
 
         void ProcessIncommingEvents () {
@@ -376,6 +380,8 @@ namespace UdpKit {
 
                 if (cn == null) {
                     UdpLog.Error("could not create connection for endpoint {0}", ev.EndPoint.ToString());
+                } else {
+                    UdpLog.Info("connecting to {0}", ev.EndPoint.ToString());
                 }
             }
         }
@@ -431,7 +437,7 @@ namespace UdpKit {
                 connLookup.Clear();
                 eventQueueIn.Clear();
                 pendingConnections.Clear();
-                
+
                 GetReadStream().Data = null;
                 GetWriteStream(0, 0).Data = null;
             }
@@ -507,10 +513,7 @@ namespace UdpKit {
         }
 
         void RecvUnconnectedPacket (UdpStream buffer, UdpEndPoint ep) {
-            // make sure we always start at zero
             UdpAssert.Assert(buffer.Ptr == 0);
-
-            // 
             buffer.Ptr = UdpHeader.GetSize(this);
 
             if (buffer.ReadByte(8) == (byte) UdpCommandType.Connect) {
@@ -525,8 +528,6 @@ namespace UdpKit {
                 } else {
                     SendRefusedCommand(ep);
                 }
-            } else {
-                UdpLog.Debug("received invalid header byte in unconnected packet from {0}", ep.ToString());
             }
         }
 

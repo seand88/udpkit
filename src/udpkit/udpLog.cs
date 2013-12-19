@@ -33,9 +33,10 @@ namespace UdpKit {
         public const uint INFO = 1;
         public const uint USER = 2;
         public const uint DEBUG = 4;
-        public const uint WARN = 8;
+        public const uint TRACE = 8;
+        public const uint WARN = 16;
 
-        static uint enabled = INFO | USER | DEBUG | WARN;
+        static uint enabled = INFO | USER | DEBUG | TRACE | WARN;
         static Writer writer = null;
         static readonly object sync = new object();
 
@@ -64,6 +65,12 @@ namespace UdpKit {
         static public void User (string format, params object[] args) {
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.USER))
                 Write(String.Concat(Time(), ThreadName(), " | user  | ", String.Format(format, args)));
+        }
+        
+
+        static internal void Trace (string format, params object[] args) {
+            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.TRACE))
+                Write(String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
         }
 
         [Conditional("DEBUG")]

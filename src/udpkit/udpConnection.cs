@@ -166,6 +166,7 @@ namespace UdpKit {
             mtu = sock.Config.DefaultMtu;
             alwaysSendMtu = sock.Config.DefaultAlwaysSendMtu;
             serializer = sock.CreateSerializer();
+            serializer.Connection = this;
             state = UdpConnectionState.Connecting;
             recvTime = socket.GetCurrentTime();
             sendTime = recvTime;
@@ -229,7 +230,7 @@ namespace UdpKit {
 
         internal void ProcessConnectedTimeouts (uint now) {
             if ((recvTime + socket.Config.ConnectionTimeout) < now) {
-                UdpLog.Debug("disconnecting due to timeout from {0}, recvTime: {1}, now: {2}", endpoint.ToString(), recvTime.ToString(), now.ToString());
+                UdpLog.Debug("disconnecting due to timeout from {0}, last packet received: {1}, current time: {2}", endpoint.ToString(), recvTime.ToString(), now.ToString());
                 ChangeState(UdpConnectionState.Disconnected);
             }
 
@@ -478,6 +479,8 @@ namespace UdpKit {
 
         void OnStateConnected (UdpConnectionState oldState) {
             if (oldState == UdpConnectionState.Connecting) {
+                UdpLog.Info("connected to {0}", endpoint.ToString());
+
                 if (IsServer) {
                     SendCommand(UdpCommandType.Accepted);
                 }
@@ -571,6 +574,10 @@ namespace UdpKit {
 
         bool SendConnectRequest () {
             if (connectAttempts < socket.Config.ConnectRequestAttempts) {
+                if (connectAttempts != 0) {
+                    UdpLog.Info("retrying connection to {0}", endpoint.ToString());
+                }
+
                 SendCommand(UdpCommandType.Connect);
 
                 connectTimeout = socket.GetCurrentTime() + socket.Config.ConnectRequestTimeout;
