@@ -124,11 +124,6 @@ namespace UdpKit {
         public bool CalculateNetworkPing = true;
         
         /// <summary>
-        /// If we should write the packet bit size into the packet itself, this adds a 2 byte overhead to each packet, default: true
-        /// </summary>
-        public bool WritePacketBitSize = true;
-
-        /// <summary>
         /// If we allow clients which are connecting to a server to implicitly accept the connection
         /// if we get a non-rejected and non-accepted packet from the server, meaning the accept packet
         /// was lost, default: true

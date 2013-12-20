@@ -415,20 +415,15 @@ namespace UdpKit {
             return UdpSendFailReason.None;
         }
 
-        bool ParseHeader (UdpStream buffer) {
+        bool ParseHeader (UdpStream stream) {
             // we should always start at ptr 0
-            UdpAssert.Assert(buffer.Ptr == 0);
+            UdpAssert.Assert(stream.Ptr == 0);
 
             UdpHeader header = new UdpHeader();
-            header.Unpack(buffer, socket);
+            header.Unpack(stream, socket);
 
             // after unpacking the header, the pointer should be at the header size
-            UdpAssert.Assert(buffer.Ptr == UdpHeader.GetSize(socket));
-
-            // Assign bit size
-            if (socket.Config.WritePacketBitSize) {
-                buffer.Length = header.BitSize;
-            }
+            UdpAssert.Assert(stream.Ptr == UdpHeader.GetSize(socket));
 
             int seqDistance = UdpMath.SeqDistance(header.ObjSequence, recvSequence, UdpHeader.SEQ_PADD);
 

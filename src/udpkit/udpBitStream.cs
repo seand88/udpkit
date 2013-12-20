@@ -39,6 +39,14 @@ namespace UdpKit {
             get { return Ptr == Length; }
         }
 
+        public int Size {
+            get { return Length; }
+        }
+
+        public int Position {
+            get { return Ptr; }
+        }
+
         public bool Overflowing {
             get { return Ptr > Length; }
         }

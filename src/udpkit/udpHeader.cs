@@ -33,7 +33,6 @@ namespace UdpKit {
         public ulong AckHistory;
         public ushort AckTime;
         public bool IsObject;
-        public ushort BitSize;
         public uint Now;
 
         public void Pack (UdpStream buffer, UdpSocket socket) {
@@ -46,10 +45,6 @@ namespace UdpKit {
 
             if (socket.Config.CalculateNetworkPing) {
                 buffer.WriteUShort(AckTime, 16);
-            }
-
-            if (socket.Config.WritePacketBitSize) {
-                buffer.WriteUShort(BitSize, 16);
             }
 
             buffer.LoadPosition(pos);
@@ -66,13 +61,10 @@ namespace UdpKit {
                 AckTime = buffer.ReadUShort(16);
             }
 
-            if (socket.Config.WritePacketBitSize) {
-                BitSize = buffer.ReadUShort(16);
-            }
         }
 
         public static int GetSize (UdpSocket socket) {
-            return 16 + 16 + socket.Config.AckRedundancy + (socket.Config.CalculateNetworkPing ? 16 : 0) + (socket.Config.WritePacketBitSize ? 16 : 0);
+            return 16 + 16 + socket.Config.AckRedundancy + (socket.Config.CalculateNetworkPing ? 16 : 0);
         }
 
         ushort PadSequence (ushort sequence) {
