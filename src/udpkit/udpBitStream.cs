@@ -70,8 +70,9 @@ namespace UdpKit {
             Ptr = position.Ptr;
         }
 
-        public void WriteBool (bool value) {
+        public bool WriteBool (bool value) {
             WriteByte(value ? (byte) 1 : (byte) 0, 1);
+            return value;
         }
 
         public bool ReadBool () {
