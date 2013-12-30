@@ -79,60 +79,24 @@ namespace UdpKit {
         }
 
         public bool WriteBool (bool value) {
-            WriteByte(value ? (byte) 1 : (byte) 0, 1);
+            UdpLog.Trace("Writing bool (1 bit)");
+            InternalWriteByte(value ? (byte) 1 : (byte) 0, 1);
             return value;
         }
 
         public bool ReadBool () {
-            return ReadByte(1) == 1;
+            UdpLog.Trace("Reading bool (1 bit)");
+            return InternalReadByte(1) == 1;
         }
 
         public void WriteByte (byte value, int bits) {
-            if (bits <= 0)
-                return;
-
-            value = (byte) (value & (0xFF >> (8 - bits)));
-
-            int p = Ptr >> 3;
-            int bitsUsed = Ptr & 0x7;
-            int bitsFree = 8 - bitsUsed;
-            int bitsLeft = bitsFree - bits;
-
-            if (bitsLeft >= 0) {
-                int mask = (0xFF >> bitsFree) | (0xFF << (8 - bitsLeft));
-                Data[p] = (byte) ((Data[p] & mask) | (value << bitsUsed));
-            } else {
-                Data[p] = (byte) ((Data[p] & (0xFF >> bitsFree)) | (value << bitsUsed));
-                Data[p + 1] = (byte) ((Data[p + 1] & (0xFF << (bits - bitsFree))) | (value >> bitsFree));
-            }
-
-            Ptr += bits;
+            UdpLog.Trace("Writing byte ({0} bits)", bits);
+            InternalWriteByte(value, bits);
         }
 
         public byte ReadByte (int bits) {
-            if (bits <= 0)
-                return 0;
-
-            byte value;
-            int p = Ptr >> 3;
-            int bitsUsed = Ptr % 8;
-
-            if (bitsUsed == 0 && bits == 8) {
-                value = Data[p];
-            } else {
-                int first = Data[p] >> bitsUsed;
-                int remainingBits = bits - (8 - bitsUsed);
-
-                if (remainingBits < 1) {
-                    value = (byte) (first & (0xFF >> (8 - bits)));
-                } else {
-                    int second = Data[p + 1] & (0xFF >> (8 - remainingBits));
-                    value = (byte) (first | (second << (bits - remainingBits)));
-                }
-            }
-
-            Ptr += bits;
-            return value;
+            UdpLog.Trace("Reading byte ({0} bits)", bits);
+            return InternalReadByte(bits);
         }
 
         public void WriteByte (byte value) {
@@ -144,11 +108,13 @@ namespace UdpKit {
         }
 
         public void WriteSByte (sbyte value, int bits) {
-            WriteByte((byte) value, bits);
+            UdpLog.Trace("Writing sbyte ({0} bits)", bits);
+            InternalWriteByte((byte) value, bits);
         }
 
         public sbyte ReadSByte (int bits) {
-            return (sbyte) ReadByte(bits);
+            UdpLog.Trace("Reading sbyte ({0} bits)", bits);
+            return (sbyte) InternalReadByte(bits);
         }
 
         public void WriteSByte (sbyte value) {
@@ -160,19 +126,23 @@ namespace UdpKit {
         }
 
         public void WriteUShort (ushort value, int bits) {
+            UdpLog.Trace("Writing ushort ({0} bits)", bits);
+
             if (bits <= 8) {
-                WriteByte((byte) (value & 0xFF), bits);
+                InternalWriteByte((byte) (value & 0xFF), bits);
             } else {
-                WriteByte((byte) (value & 0xFF), 8);
-                WriteByte((byte) (value >> 8), bits - 8);
+                InternalWriteByte((byte) (value & 0xFF), 8);
+                InternalWriteByte((byte) (value >> 8), bits - 8);
             }
         }
 
         public ushort ReadUShort (int bits) {
+            UdpLog.Trace("Reading ushort ({0} bits)", bits);
+
             if (bits <= 8) {
-                return ReadByte(bits);
+                return InternalReadByte(bits);
             } else {
-                return (ushort) (ReadByte(8) | (ReadByte(bits - 8) << 8));
+                return (ushort) (InternalReadByte(8) | (InternalReadByte(bits - 8) << 8));
             }
         }
 
@@ -219,6 +189,8 @@ namespace UdpKit {
         }
 
         public void WriteUInt (uint value, int bits) {
+            UdpLog.Trace("Writing uint ({0} bits)", bits);
+
             byte 
                 a = (byte) (value >> 0),
                 b = (byte) (value >> 8),
@@ -227,30 +199,32 @@ namespace UdpKit {
 
             switch ((bits + 7) / 8) {
                 case 1:
-                    WriteByte(a, bits);
+                    InternalWriteByte(a, bits);
                     break;
 
                 case 2:
-                    WriteByte(b, 8);
-                    WriteByte(c, bits - 8);
+                    InternalWriteByte(b, 8);
+                    InternalWriteByte(c, bits - 8);
                     break;
 
                 case 3:
-                    WriteByte(a, 8);
-                    WriteByte(b, 8);
-                    WriteByte(c, bits - 16);
+                    InternalWriteByte(a, 8);
+                    InternalWriteByte(b, 8);
+                    InternalWriteByte(c, bits - 16);
                     break;
 
                 case 4:
-                    WriteByte(a, 8);
-                    WriteByte(b, 8);
-                    WriteByte(c, 8);
-                    WriteByte(d, bits - 24);
+                    InternalWriteByte(a, 8);
+                    InternalWriteByte(b, 8);
+                    InternalWriteByte(c, 8);
+                    InternalWriteByte(d, bits - 24);
                     break;
             }
         }
 
         public uint ReadUInt (int bits) {
+            UdpLog.Trace("Reading uint ({0} bits)", bits);
+
             int 
                 a = 0, 
                 b = 0, 
@@ -259,25 +233,25 @@ namespace UdpKit {
 
             switch ((bits + 7) / 8) {
                 case 1:
-                    a = ReadByte(bits);
+                    a = InternalReadByte(bits);
                     break;
 
                 case 2:
-                    b = ReadByte(8);
-                    c = ReadByte(bits - 8);
+                    b = InternalReadByte(8);
+                    c = InternalReadByte(bits - 8);
                     break;
 
                 case 3:
-                    a = ReadByte(8);
-                    b = ReadByte(8);
-                    c = ReadByte(bits - 16);
+                    a = InternalReadByte(8);
+                    b = InternalReadByte(8);
+                    c = InternalReadByte(bits - 16);
                     break;
 
                 case 4:
-                    a = ReadByte(8);
-                    b = ReadByte(8);
-                    c = ReadByte(8);
-                    d = ReadByte(bits - 24);
+                    a = InternalReadByte(8);
+                    b = InternalReadByte(8);
+                    c = InternalReadByte(8);
+                    d = InternalReadByte(bits - 24);
                     break;
             }
 
@@ -317,6 +291,8 @@ namespace UdpKit {
         }
 
         public void WriteULong (ulong value, int bits) {
+            UdpLog.Trace("Writing ulong ({0} bits)", bits);
+
             if (bits <= 32) {
                 WriteUInt((uint) (value & 0xFFFFFFFF), bits);
             } else {
@@ -326,6 +302,8 @@ namespace UdpKit {
         }
 
         public ulong ReadULong (int bits) {
+            UdpLog.Trace("Reading ulong ({0} bits)", bits);
+
             if (bits <= 32) {
                 return ReadUInt(bits);
             } else {
@@ -368,44 +346,52 @@ namespace UdpKit {
         }
 
         public void WriteFloat (float value) {
+            UdpLog.Trace("Writing float (32 bits)");
+
             UdpByteConverter bytes = value;
-            WriteByte(bytes.Byte0, 8);
-            WriteByte(bytes.Byte1, 8);
-            WriteByte(bytes.Byte2, 8);
-            WriteByte(bytes.Byte3, 8);
+            InternalWriteByte(bytes.Byte0, 8);
+            InternalWriteByte(bytes.Byte1, 8);
+            InternalWriteByte(bytes.Byte2, 8);
+            InternalWriteByte(bytes.Byte3, 8);
         }
 
         public float ReadFloat () {
+            UdpLog.Trace("Reading float (32 bits)");
+
             UdpByteConverter bytes = default(UdpByteConverter);
-            bytes.Byte0 = ReadByte(8);
-            bytes.Byte1 = ReadByte(8);
-            bytes.Byte2 = ReadByte(8);
-            bytes.Byte3 = ReadByte(8);
+            bytes.Byte0 = InternalReadByte(8);
+            bytes.Byte1 = InternalReadByte(8);
+            bytes.Byte2 = InternalReadByte(8);
+            bytes.Byte3 = InternalReadByte(8);
             return bytes.Float32;
         }
 
         public void WriteDouble (double value) {
+            UdpLog.Trace("Writing double (64 bits)");
+
             UdpByteConverter bytes = value;
-            WriteByte(bytes.Byte0, 8);
-            WriteByte(bytes.Byte1, 8);
-            WriteByte(bytes.Byte2, 8);
-            WriteByte(bytes.Byte3, 8);
-            WriteByte(bytes.Byte4, 8);
-            WriteByte(bytes.Byte5, 8);
-            WriteByte(bytes.Byte6, 8);
-            WriteByte(bytes.Byte7, 8);
+            InternalWriteByte(bytes.Byte0, 8);
+            InternalWriteByte(bytes.Byte1, 8);
+            InternalWriteByte(bytes.Byte2, 8);
+            InternalWriteByte(bytes.Byte3, 8);
+            InternalWriteByte(bytes.Byte4, 8);
+            InternalWriteByte(bytes.Byte5, 8);
+            InternalWriteByte(bytes.Byte6, 8);
+            InternalWriteByte(bytes.Byte7, 8);
         }
 
         public double ReadDouble () {
+            UdpLog.Trace("Reading double (64 bits)");
+
             UdpByteConverter bytes = default(UdpByteConverter);
-            bytes.Byte0 = ReadByte(8);
-            bytes.Byte1 = ReadByte(8);
-            bytes.Byte2 = ReadByte(8);
-            bytes.Byte3 = ReadByte(8);
-            bytes.Byte4 = ReadByte(8);
-            bytes.Byte5 = ReadByte(8);
-            bytes.Byte6 = ReadByte(8);
-            bytes.Byte7 = ReadByte(8);
+            bytes.Byte0 = InternalReadByte(8);
+            bytes.Byte1 = InternalReadByte(8);
+            bytes.Byte2 = InternalReadByte(8);
+            bytes.Byte3 = InternalReadByte(8);
+            bytes.Byte4 = InternalReadByte(8);
+            bytes.Byte5 = InternalReadByte(8);
+            bytes.Byte6 = InternalReadByte(8);
+            bytes.Byte7 = InternalReadByte(8);
             return bytes.Float64;
         }
 
@@ -418,6 +404,8 @@ namespace UdpKit {
         }
 
         public void WriteByteArray (byte[] from, int offset, int count) {
+            UdpLog.Trace("Writing byte array ({0} bits)", count * 8);
+
             int p = Ptr >> 3;
             int bitsUsed = Ptr % 8;
             int bitsFree = 8 - bitsUsed;
@@ -450,6 +438,8 @@ namespace UdpKit {
         }
 
         public void ReadByteArray (byte[] to, int offset, int count) {
+            UdpLog.Trace("Reading byte array ({0} bits)", count * 8);
+
             int p = Ptr >> 3;
             int bitsUsed = Ptr % 8;
 
@@ -469,6 +459,54 @@ namespace UdpKit {
             }
 
             Ptr += (count * 8);
+        }
+
+        void InternalWriteByte (byte value, int bits) {
+            if (bits <= 0)
+                return;
+
+            value = (byte) (value & (0xFF >> (8 - bits)));
+
+            int p = Ptr >> 3;
+            int bitsUsed = Ptr & 0x7;
+            int bitsFree = 8 - bitsUsed;
+            int bitsLeft = bitsFree - bits;
+
+            if (bitsLeft >= 0) {
+                int mask = (0xFF >> bitsFree) | (0xFF << (8 - bitsLeft));
+                Data[p] = (byte) ((Data[p] & mask) | (value << bitsUsed));
+            } else {
+                Data[p] = (byte) ((Data[p] & (0xFF >> bitsFree)) | (value << bitsUsed));
+                Data[p + 1] = (byte) ((Data[p + 1] & (0xFF << (bits - bitsFree))) | (value >> bitsFree));
+            }
+
+            Ptr += bits;
+        }
+
+        byte InternalReadByte (int bits) {
+            if (bits <= 0)
+                return 0;
+
+            byte value;
+            int p = Ptr >> 3;
+            int bitsUsed = Ptr % 8;
+
+            if (bitsUsed == 0 && bits == 8) {
+                value = Data[p];
+            } else {
+                int first = Data[p] >> bitsUsed;
+                int remainingBits = bits - (8 - bitsUsed);
+
+                if (remainingBits < 1) {
+                    value = (byte) (first & (0xFF >> (8 - bits)));
+                } else {
+                    int second = Data[p + 1] & (0xFF >> (8 - remainingBits));
+                    value = (byte) (first | (second << (bits - remainingBits)));
+                }
+            }
+
+            Ptr += bits;
+            return value;
         }
     }
 }

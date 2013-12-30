@@ -162,8 +162,8 @@ namespace UdpKit.Examples.Chat {
             Console.WriteLine("Press [S] to start server");
             Console.WriteLine("Press [C] to start client");
             Console.Write("... ");
-
-            UdpLog.SetWriter(Console.WriteLine);
+            
+            UdpLog.SetWriter((l, m) => Console.WriteLine(m));
 
             switch (Console.ReadKey(true).Key) {
                 case ConsoleKey.S:

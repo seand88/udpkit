@@ -28,24 +28,25 @@ using System.Threading;
 
 namespace UdpKit {
     public static class UdpLog {
-        public delegate void Writer (string msg);
-
+        public delegate void Writer (uint level, string message);
+        
+        public const uint ERROR = 0;
         public const uint INFO = 1;
         public const uint USER = 2;
         public const uint DEBUG = 4;
         public const uint TRACE = 8;
         public const uint WARN = 16;
 
-        static uint enabled = INFO | USER | DEBUG | TRACE | WARN;
+        static uint enabled = INFO | USER | DEBUG | TRACE | WARN | ERROR;
         static Writer writer = null;
         static readonly object sync = new object();
 
-        static void Write (string message) {
+        static void Write (uint level, string message) {
             lock (UdpLog.sync) {
                 Writer callback = UdpLog.writer;
 
                 if (callback != null)
-                    callback(message);
+                    callback(level, message);
             }
         }
 
@@ -59,25 +60,25 @@ namespace UdpKit {
 
         static internal void Info (string format, params object[] args) {
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.INFO))
-                Write(String.Concat(Time(), ThreadName(), " | info  | ", String.Format(format, args)));
-        }
-
-        static public void User (string format, params object[] args) {
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.USER))
-                Write(String.Concat(Time(), ThreadName(), " | user  | ", String.Format(format, args)));
+                Write(INFO, String.Concat(Time(), ThreadName(), " | info  | ", String.Format(format, args)));
         }
         
+        static public void User (string format, params object[] args) {
+            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.INFO))
+                Write(USER, String.Concat(Time(), ThreadName(), " | user  | ", String.Format(format, args)));
+        }
 
+        [Conditional("DEBUG")]
         static internal void Trace (string format, params object[] args) {
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.TRACE))
-                Write(String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
+                Write(TRACE, String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
         }
 
         [Conditional("DEBUG")]
         static internal void Debug (string format, params object[] args) {
 #if DEBUG
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.DEBUG))
-                Write(String.Concat(Time(), ThreadName(), " | debug | ", String.Format(format, args), "\r\n", Environment.StackTrace));
+                Write(DEBUG, String.Concat(Time(), ThreadName(), " | debug | ", String.Format(format, args)));
 #endif
         }
 
@@ -85,7 +86,7 @@ namespace UdpKit {
 
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.WARN)) {
 #if DEBUG
-                Write(String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args), "\r\n", Environment.StackTrace));
+                Write(WARN, String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
                 Write(String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args)));
 #endif
@@ -94,9 +95,9 @@ namespace UdpKit {
 
         static internal void Error (string format, params object[] args) {
 #if DEBUG
-            Write(String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args), "\r\n", Environment.StackTrace));
+            Write(ERROR, String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
-            Write(String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args)));
+            Write(ERROR, String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args)));
 #endif
         }
 

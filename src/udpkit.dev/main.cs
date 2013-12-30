@@ -87,8 +87,7 @@ namespace udpkitdev {
 
         static void Main (string[] args) {
             Console.BufferHeight = 5000;
-
-            UdpLog.SetWriter(Console.WriteLine);
+            UdpLog.SetWriter((l, m) => Console.WriteLine(m));
 
             serverThread = new Thread(Server);
             serverThread.IsBackground = true;

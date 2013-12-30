@@ -226,7 +226,7 @@ namespace UdpKit.stresstest {
             var fs = File.AppendText("log.txt");
             sockets = new SocketObject[ClientCount + 1];
             Thread th = new Thread(ProcThread);
-            UdpLog.SetWriter(s => { fs.WriteLine(s); });
+            UdpLog.SetWriter((l, s) => { fs.WriteLine(s); });
 
             sockets[0] = new ServerObject();
 
