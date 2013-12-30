@@ -58,7 +58,7 @@ namespace UdpKit {
             return " | thread #" + Thread.CurrentThread.ManagedThreadId.ToString().PadLeft(3, '0');
         }
 
-        static internal void Info (string format, params object[] args) {
+        static public void Info (string format, params object[] args) {
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.INFO))
                 Write(INFO, String.Concat(Time(), ThreadName(), " | info  | ", String.Format(format, args)));
         }
@@ -69,20 +69,20 @@ namespace UdpKit {
         }
 
         [Conditional("DEBUG")]
-        static internal void Trace (string format, params object[] args) {
+        static public void Trace (string format, params object[] args) {
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.TRACE))
                 Write(TRACE, String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
         }
 
         [Conditional("DEBUG")]
-        static internal void Debug (string format, params object[] args) {
+        static public void Debug (string format, params object[] args) {
 #if DEBUG
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.DEBUG))
                 Write(DEBUG, String.Concat(Time(), ThreadName(), " | debug | ", String.Format(format, args)));
 #endif
         }
 
-        static internal void Warn (string format, params object[] args) {
+        static public void Warn (string format, params object[] args) {
 
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.WARN)) {
 #if DEBUG
@@ -93,7 +93,7 @@ namespace UdpKit {
             }
         }
 
-        static internal void Error (string format, params object[] args) {
+        static public void Error (string format, params object[] args) {
 #if DEBUG
             Write(ERROR, String.Concat(Time(), ThreadName(), " | error | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
