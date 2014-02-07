@@ -10,3 +10,9 @@ Building native shared library for Android:
 3. Run the NDK build command like this: ndk_path/ndk-build udpkit_source_path/src/native/android
 4. The .so file can now be found somewhere in the "obj" directory inside udpkit_source_path/src/native/android
 
+Building native static library for iOS:
+1. Make sure you have the latest Xcode installed
+2. Open the .xcodeproj file located in udpkit_source_path/src/native/ios
+3. Build the project from the build menu
+4. The shared library (.a file) is now located in your Xcode derived data directory,
+which can be found by going to XCode/Preferences/Locations and checking “Derived Data”.
