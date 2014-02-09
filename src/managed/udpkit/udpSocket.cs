@@ -36,16 +36,7 @@ namespace UdpKit {
         Shutdown = 3
     }
 
-    public class UdpSocket {
-        
-#if DEBUG
-        class DelayedPacket {
-            public uint Time;
-            public byte[] Data;
-            public int Length;
-            public UdpEndPoint EndPoint;
-        }
-#endif
+    public partial class UdpSocket {
 
         readonly internal UdpConfig Config;
 
@@ -63,11 +54,6 @@ namespace UdpKit {
         readonly List<UdpConnection> connList = new List<UdpConnection>();
         readonly UdpSet<UdpEndPoint> pendingConnections = new UdpSet<UdpEndPoint>(new UdpEndPointComparer());
         readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPointComparer());
-        
-#if DEBUG
-        readonly Queue<DelayedPacket> delayedPackets = new Queue<DelayedPacket>();
-        readonly Queue<byte[]> delayBuffers = new Queue<byte[]>();
-#endif
 
         /// <summary>
         /// Current amount of connections
@@ -354,8 +340,8 @@ namespace UdpKit {
 
                 UdpLog.Info("socket started");
                 while (state == udpSocketState.Running) {
+                    RecvDelayedPackets();
                     RecvNetworkData();
-                    RecvDelayedData();
                     ProcessTimeouts();
                     ProcessIncommingEvents();
                     frame += 1;
@@ -525,69 +511,41 @@ namespace UdpKit {
 
         void RecvNetworkData () {
             if (platform.RecvPoll(1)) {
-                int byteReceived = 0;
+                int bytes = 0;
                 UdpEndPoint ep = UdpEndPoint.Any;
                 UdpStream stream = GetReadStream();
 
-                if (platform.RecvFrom(stream.Data, stream.Data.Length, ref byteReceived, ref ep)) {
-                    // set stream length to bits received
-                    stream.Length = byteReceived << 3;
-
+                if (platform.RecvFrom(stream.Data, stream.Data.Length, ref bytes, ref ep)) {
 #if DEBUG
-                    if (random.NextDouble() < Config.SimulatedLoss) {
-                        UdpLog.Info("simulated loss of packet from {0}", ep.ToString());
+                    if (ShouldDropPacket) {
                         return;
                     }
 
-                    if (Config.SimulatedPingMin > 0 && Config.SimulatedPingMax > 0 && Config.SimulatedPingMin < Config.SimulatedPingMax) {
-                        uint delayTime = (uint) random.Next(Config.SimulatedPingMin, Config.SimulatedPingMax);
-                        DelayedPacket delayed = new DelayedPacket {
-                            Data = delayBuffers.Count > 0 ? delayBuffers.Dequeue() : new byte[Config.MtuMax * 2],
-                            Length = byteReceived,
-                            EndPoint = ep,
-                            Time = GetCurrentTime() + delayTime,
-                        };
-
-                        Array.Copy(stream.Data, 0, delayed.Data, 0, stream.Data.Length);
-                        delayedPackets.Enqueue(delayed);
+                    if (ShouldDelayPacket) {
+                        DelayPacket(ep, stream.Data, bytes);
                         return;
                     }
 #endif
-
-                    UdpConnection cn;
-
-                    if (connLookup.TryGetValue(ep, out cn)) {
-                        cn.OnPacket(stream);
-                    } else {
-                        RecvUnconnectedPacket(stream, ep);
-                    }
+                    RecvNetworkPacket(ep, stream, bytes);
                 }
             }
         }
 
-        [Conditional("DEBUG")]
-        void RecvDelayedData () {
-#if DEBUG
-            while (delayedPackets.Count > 0 && GetCurrentTime() >= delayedPackets.Peek().Time) {
-                DelayedPacket delayed = delayedPackets.Dequeue();
-                UdpStream stream = GetReadStream();
-                stream.Length = delayed.Length << 3;
+        void RecvNetworkPacket (UdpEndPoint ep, UdpStream stream, int bytes) {
+            // set stream length
+            stream.Length = bytes << 3;
 
-                // copy data back
-                Array.Copy(delayed.Data, 0, stream.Data, 0, stream.Data.Length);
-                Array.Clear(delayed.Data, 0, delayed.Data.Length);
+            // try to grab connection
+            UdpConnection cn;
 
-                UdpConnection cn;
+            if (connLookup.TryGetValue(ep, out cn)) {
+                // deliver to connection
+                cn.OnPacket(stream);
 
-                if (connLookup.TryGetValue(delayed.EndPoint, out cn)) {
-                    cn.OnPacket(stream);
-                } else {
-                    RecvUnconnectedPacket(stream, delayed.EndPoint);
-                }
-
-                delayBuffers.Enqueue(delayed.Data);
+            } else {
+                // handle unconnected data
+                RecvUnconnectedPacket(stream, ep);
             }
-#endif
         }
 
         void RecvUnconnectedPacket (UdpStream buffer, UdpEndPoint ep) {
@@ -608,6 +566,11 @@ namespace UdpKit {
                 }
             }
         }
+
+        #region Partial Methods
+        partial void DelayPacket (UdpEndPoint ep, byte[] data, int length);
+        partial void RecvDelayedPackets ();
+        #endregion
 
         public static UdpSocket Create (UdpPlatform platform, UdpSerializerFactory serializer, UdpConfig config) {
             return new UdpSocket(platform, serializer, config);

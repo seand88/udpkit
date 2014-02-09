@@ -40,7 +40,8 @@
     <Compile Include="slimmath\half.cs" />
     <Compile Include="udpAddress.cs" />
     <Compile Include="udpAssert.cs" />
-    <Compile Include="udpBitStream.cs" />
+    <Compile Include="udpSocket.Simulation.cs" />
+    <Compile Include="udpStream.cs" />
     <Compile Include="udpByteConverter.cs" />
     <Compile Include="udpCommand.cs" />
     <Compile Include="udpConfig.cs" />
