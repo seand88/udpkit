@@ -128,10 +128,18 @@ namespace UdpKit {
             get { return sendWindow.FillRatio; }
         }
 
+        /// <summary>
+        /// Statistics of this connection
+        /// </summary>
+        public UdpStats Stats {
+            get { return stats; }
+        }
+
         int mtu;
         float networkRtt = 0.1f;
         float aliasedRtt = 0.1f;
         bool alwaysSendMtu;
+        UdpStats stats;
         UdpSerializer serializer;
         UdpConnectionMode mode;
         UdpEndPoint endpoint;
@@ -152,6 +160,7 @@ namespace UdpKit {
             socket = s;
             mode = m;
             endpoint = ep;
+            stats = new UdpStats();
             networkRtt = socket.Config.DefaultNetworkPing;
             aliasedRtt = socket.Config.DefaultAliasedPing;
             mtu = socket.Config.DefaultMtu;
@@ -263,6 +272,11 @@ namespace UdpKit {
         }
 
         internal void OnPacket (UdpStream buffer) {
+            // track stats
+            stats.PacketReceived((uint) buffer.Length >> 3);
+            socket.Stats.PacketReceived((uint) buffer.Length >> 3);
+
+            // set recv time of for last packet
             recvTime = socket.GetCurrentTime();
 
             if ((buffer.Data[0] & 1) == 1) {
@@ -270,6 +284,7 @@ namespace UdpKit {
             } else {
                 OnCommandReceived(buffer);
             }
+
         }
 
         void OnCommandReceived (UdpStream buffer) {
@@ -322,11 +337,16 @@ namespace UdpKit {
                     UdpHandle handle = MakeHandle(ref header);
                     handle.Object = obj;
 
-                    if (SendStream(stream, handle, alwaysSendMtu) == false) {
-                        socket.Raise(UdpEvent.PUBLIC_OBJECT_SEND_FAILED, this, obj, UdpSendFailReason.SocketError);
+                    if (SendStream(stream, handle, alwaysSendMtu)) {
+                        // track stats
+                        stats.PacketSent((uint) stream.Ptr >> 3);
+                        socket.Stats.PacketSent((uint) stream.Ptr >> 3);
+
+                        // push object to user thread
+                        socket.Raise(UdpEvent.PUBLIC_OBJECT_SENT, this, obj);
 
                     } else {
-                        socket.Raise(UdpEvent.PUBLIC_OBJECT_SENT, this, obj);
+                        socket.Raise(UdpEvent.PUBLIC_OBJECT_SEND_FAILED, this, obj, UdpSendFailReason.SocketError);
                     }
                 } else {
                     socket.Raise(UdpEvent.PUBLIC_OBJECT_SEND_FAILED, this, obj, UdpSendFailReason.SerializerReturnedFalse);
@@ -345,8 +365,13 @@ namespace UdpKit {
                 UdpHandle handle = MakeHandle(ref header);
                 handle.Object = null;
 
-                if (SendStream(stream, handle, false) == false) {
-                    // do something here?
+                if (SendStream(stream, handle, false)) {
+                    // track stats
+                    stats.PacketSent((uint) stream.Ptr >> 3);
+                    socket.Stats.PacketSent((uint) stream.Ptr >> 3);
+
+                } else {
+                    // should we do something here?????
                 }
             }
         }
@@ -385,8 +410,9 @@ namespace UdpKit {
             header.ObjSequence = UdpMath.SeqNext(sendSequence, UdpHeader.SEQ_MASK);
             header.Now = socket.GetCurrentTime();
 
-            if (recvTime > 0)
+            if (recvTime > 0) {
                 header.AckTime = (ushort) UdpMath.Clamp(header.Now - recvTime, 0, socket.Config.MaxPing);
+            }
 
             return header;
         }
@@ -585,12 +611,28 @@ namespace UdpKit {
 
                 if (handle.IsObject) {
                     if (seqDistance <= -socket.Config.AckRedundancy) {
+                        // track stats
+                        stats.PacketLost();
+                        socket.Stats.PacketLost();
+
+                        // handle lost
                         ObjectLost(handle.Object);
                     }
 
                     if ((header.AckHistory & (1UL << -seqDistance)) != 0UL) {
+                        // track stats
+                        stats.PacketDelivered();
+                        socket.Stats.PacketDelivered();
+
+                        // handle delivered objects
                         ObjectDelivered(handle.Object);
+
                     } else {
+                        // track stats
+                        stats.PacketLost();
+                        socket.Stats.PacketLost();
+
+                        // handle
                         ObjectLost(handle.Object);
                     }
                 }

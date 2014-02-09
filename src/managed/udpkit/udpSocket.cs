@@ -44,6 +44,7 @@ namespace UdpKit {
         volatile udpSocketState state;
 
         readonly Random random;
+        readonly UdpStats stats;
         readonly Thread threadSocket;
         readonly UdpPlatform platform;
         readonly UdpStream readStream;
@@ -69,6 +70,13 @@ namespace UdpKit {
             get { return platform.EndPoint; }
         }
 
+        /// <summary>
+        /// Statistics for the entire socket
+        /// </summary>
+        public UdpStats Stats {
+            get { return stats; }
+        }
+
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
@@ -76,6 +84,7 @@ namespace UdpKit {
 
             state = udpSocketState.Created;
             random = new Random();
+            stats = new UdpStats();
 
             readStream = new UdpStream(new byte[config.MtuMax * 2]);
             writeStream = new UdpStream(new byte[config.MtuMax * 2]);
@@ -526,6 +535,7 @@ namespace UdpKit {
                         return;
                     }
 #endif
+
                     RecvNetworkPacket(ep, stream, bytes);
                 }
             }

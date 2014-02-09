@@ -37,7 +37,7 @@ namespace UdpKit {
         }
 
         public bool Poll (ref UdpEvent ev) {
-            bool allowRestart = true;
+            bool allowRestart = (index != 0);
 
         RESTART:
             for (int i = index; i < sockets.Length; ++i) {

@@ -46,7 +46,7 @@
     <Compile Include="udpCommand.cs" />
     <Compile Include="udpConfig.cs" />
     <Compile Include="udpConnection.cs" />
-    <Compile Include="udpConnectionStats.cs" />
+    <Compile Include="udpStats.cs" />
     <Compile Include="udpEndpoint.cs" />
     <Compile Include="udpEvent.cs" />
     <Compile Include="udpException.cs" />
