@@ -11,7 +11,7 @@ public class demoPeer : MonoBehaviour {
     internal string serverAddress = "127.0.0.1:14000";
 
     void Awake () {
-        UdpLog.SetWriter(s => Debug.Log(s));
+        UdpLog.SetWriter((s, lvl) => Debug.Log(s));
     }
 
     void Start () {

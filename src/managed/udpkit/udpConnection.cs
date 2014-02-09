@@ -284,7 +284,6 @@ namespace UdpKit {
             } else {
                 OnCommandReceived(buffer);
             }
-
         }
 
         void OnCommandReceived (UdpStream buffer) {
