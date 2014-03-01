@@ -48,16 +48,16 @@ namespace UdpKit {
             set { Ptr = UdpMath.Clamp(value, 0, Length); }
         }
 
+        public byte[] ByteBuffer {
+            get { return Data; }
+        }
+
         public UdpStream (byte[] arr)
             : this(arr, arr.Length) {
         }
 
-        public UdpStream (byte[] arr, int size)
-            : this(arr, size, 0) {
-        }
-
-        public UdpStream (byte[] arr, int size, int offset) {
-            Ptr = offset;
+        public UdpStream (byte[] arr, int size) {
+            Ptr = 0;
             Data = arr;
             Length = size << 3;
         }
