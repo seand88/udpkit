@@ -39,7 +39,8 @@ namespace UdpKit {
     public partial class UdpSocket {
 
         /// <summary>
-        /// The amount of redundant acks we should do, must be ^2 and >= 8
+        /// The amount of redundant acks we should do, valid values are:
+        /// 8, 16, 24, 32, 40, 48, 56, 64
         /// </summary>
         public static int AckRedundancy {
             get { return 64; }
