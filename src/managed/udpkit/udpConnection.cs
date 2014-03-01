@@ -288,7 +288,7 @@ namespace UdpKit {
 
         void OnCommandReceived (UdpStream buffer) {
             if (ParseHeader(buffer)) {
-                buffer.Ptr = UdpHeader.GetSize(socket);
+                buffer.Ptr = UdpSocket.HeaderBitSize;
                 UdpCommandType cmd = (UdpCommandType) buffer.ReadByte(8);
 
                 switch (cmd) {
@@ -320,7 +320,7 @@ namespace UdpKit {
                     break;
                 }
 
-                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpHeader.GetSize(socket));
+                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpSocket.HeaderBitSize);
                 object obj = serializer.NextObject();
 
                 if (serializer.Pack(stream, ref obj)) {
@@ -355,7 +355,7 @@ namespace UdpKit {
 
         internal void SendCommand (UdpCommandType cmd) {
             if (CheckCanSend(true) == UdpSendFailReason.None) {
-                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpHeader.GetSize(socket));
+                UdpStream stream = socket.GetWriteStream(mtu << 3, UdpSocket.HeaderBitSize);
                 stream.WriteByte((byte) cmd, 8);
 
                 UdpHeader header = MakeHeader(false);
@@ -441,7 +441,7 @@ namespace UdpKit {
             header.Unpack(stream, socket);
 
             // after unpacking the header, the pointer should be at the header size
-            UdpAssert.Assert(stream.Ptr == UdpHeader.GetSize(socket));
+            UdpAssert.Assert(stream.Ptr == UdpSocket.HeaderBitSize);
 
             int seqDistance = UdpMath.SeqDistance(header.ObjSequence, recvSequence, UdpHeader.SEQ_PADD);
 
@@ -456,7 +456,7 @@ namespace UdpKit {
                 return false;
 
             // update receive history
-            if (seqDistance >= socket.Config.AckRedundancy) {
+            if (seqDistance >= UdpSocket.AckRedundancy) {
                 recvHistory = 1UL;
             } else {
                 recvHistory = (recvHistory << seqDistance) | 1UL;
@@ -480,7 +480,7 @@ namespace UdpKit {
 
             if (ParseHeader(buffer)) {
                 object obj = null;
-                buffer.Ptr = UdpHeader.GetSize(socket);
+                buffer.Ptr = UdpSocket.HeaderBitSize;
 
                 if (serializer.Unpack(buffer, ref obj)) {
                     socket.Raise(UdpEvent.PUBLIC_OBJECT_RECEIVED, this, obj);
@@ -609,7 +609,7 @@ namespace UdpKit {
                 }
 
                 if (handle.IsObject) {
-                    if (seqDistance <= -socket.Config.AckRedundancy) {
+                    if (seqDistance <= -UdpSocket.AckRedundancy) {
                         // track stats
                         stats.PacketLost();
                         socket.Stats.PacketLost();
@@ -648,7 +648,7 @@ namespace UdpKit {
             uint aliased = recvTime - sendTime;
             aliasedRtt = (aliasedRtt * 0.9f) + ((float) aliased / 1000f * 0.1f);
 
-            if (socket.Config.CalculateNetworkPing) {
+            if (UdpSocket.CalculateNetworkPing) {
                 uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);
                 networkRtt = (networkRtt * 0.9f) + ((float) network / 1000f * 0.1f);
             }

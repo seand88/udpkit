@@ -41,9 +41,9 @@ namespace UdpKit {
             buffer.Position = 0;
             buffer.WriteUShort(PadSequence(ObjSequence), 16);
             buffer.WriteUShort(PadSequence(AckSequence), 16);
-            buffer.WriteULong(AckHistory, socket.Config.AckRedundancy);
+            buffer.WriteULong(AckHistory, UdpSocket.AckRedundancy);
 
-            if (socket.Config.CalculateNetworkPing) {
+            if (UdpSocket.CalculateNetworkPing) {
                 buffer.WriteUShort(AckTime, 16);
             }
 
@@ -55,16 +55,18 @@ namespace UdpKit {
 
             ObjSequence = TrimSequence(buffer.ReadUShort(16));
             AckSequence = TrimSequence(buffer.ReadUShort(16));
-            AckHistory = buffer.ReadULong(socket.Config.AckRedundancy);
+            AckHistory = buffer.ReadULong(UdpSocket.AckRedundancy);
 
-            if (socket.Config.CalculateNetworkPing) {
+            if (UdpSocket.CalculateNetworkPing) {
                 AckTime = buffer.ReadUShort(16);
             }
         }
 
+        /*
         public static int GetSize (UdpSocket socket) {
             return 16 + 16 + socket.Config.AckRedundancy + (socket.Config.CalculateNetworkPing ? 16 : 0);
         }
+        */
 
         ushort PadSequence (ushort sequence) {
             sequence <<= SEQ_PADD;

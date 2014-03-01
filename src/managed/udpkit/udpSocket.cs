@@ -38,6 +38,27 @@ namespace UdpKit {
 
     public partial class UdpSocket {
 
+        /// <summary>
+        /// The amount of redundant acks we should do, must be ^2 and >= 8
+        /// </summary>
+        public static int AckRedundancy {
+            get { return 64; }
+        }
+
+        /// <summary>
+        /// If we should calculate network ping or not
+        /// </summary>
+        public static bool CalculateNetworkPing {
+            get { return true; }
+        }
+        
+        /// <summary>
+        /// The size of the udpkit internal header sent with each packet
+        /// </summary>
+        public static int HeaderBitSize {
+            get { return 16 + 16 + AckRedundancy + (CalculateNetworkPing ? 16 : 0); }
+        }
+
         readonly internal UdpConfig Config;
 
         volatile int frame;
@@ -55,13 +76,6 @@ namespace UdpKit {
         readonly List<UdpConnection> connList = new List<UdpConnection>();
         readonly UdpSet<UdpEndPoint> pendingConnections = new UdpSet<UdpEndPoint>(new UdpEndPointComparer());
         readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPointComparer());
-
-        /// <summary>
-        /// The current size of the header (in bits)
-        /// </summary>
-        public int HeaderBitSize {
-            get { return UdpHeader.GetSize(this); }
-        }
 
         /// <summary>
         /// Current amount of connections
@@ -288,7 +302,7 @@ namespace UdpKit {
         }
 
         void SendRefusedCommand (UdpEndPoint endpoint) {
-            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, UdpHeader.GetSize(this));
+            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, HeaderBitSize);
             stream.WriteByte((byte) UdpCommandType.Refused, 8);
 
             UdpHeader header = new UdpHeader();
@@ -577,7 +591,7 @@ namespace UdpKit {
 
         void RecvUnconnectedPacket (UdpStream buffer, UdpEndPoint ep) {
             UdpAssert.Assert(buffer.Ptr == 0);
-            buffer.Ptr = UdpHeader.GetSize(this);
+            buffer.Ptr = HeaderBitSize;
 
             if (buffer.ReadByte(8) == (byte) UdpCommandType.Connect) {
                 if (Config.AllowIncommingConnections && ((connLookup.Count + pendingConnections.Count) < Config.ConnectionLimit || Config.ConnectionLimit == -1)) {
