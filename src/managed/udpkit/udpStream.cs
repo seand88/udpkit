@@ -41,6 +41,7 @@ namespace UdpKit {
 
         public int Size {
             get { return Length; }
+            set { Length = UdpMath.Clamp(value, 0, Data.Length << 3); }
         }
 
         public int Position {
