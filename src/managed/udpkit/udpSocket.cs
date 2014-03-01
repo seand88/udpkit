@@ -343,7 +343,7 @@ namespace UdpKit {
             try {
                 UdpLog.Info("socket created");
                 while (state == udpSocketState.Created) {
-                    ProcessIncommingEvents();
+                    ProcessIncommingEvents(true);
                     Thread.Sleep(1);
                 }
 
@@ -352,7 +352,7 @@ namespace UdpKit {
                     RecvDelayedPackets();
                     RecvNetworkData();
                     ProcessTimeouts();
-                    ProcessIncommingEvents();
+                    ProcessIncommingEvents(false);
                     frame += 1;
                 }
 
@@ -362,7 +362,7 @@ namespace UdpKit {
             }
         }
 
-        void ProcessIncommingEvents () {
+        void ProcessIncommingEvents (bool returnOnStart) {
             while (true) {
                 UdpEvent ev = default(UdpEvent);
 
@@ -377,7 +377,15 @@ namespace UdpKit {
                 }
 
                 switch (ev.Type) {
-                    case UdpEvent.INTERNAL_START: OnEventStart(ev); break;
+                    case UdpEvent.INTERNAL_START:
+                        OnEventStart(ev);
+
+                        if (returnOnStart) {
+                            return;
+                        } else {
+                            break;
+                        }
+
                     case UdpEvent.INTERNAL_CONNECT: OnEventConnect(ev); break;
                     case UdpEvent.INTERNAL_CONNECT_CANCEL: OnEventConnectCancel(ev); break;
                     case UdpEvent.INTERNAL_ACCEPT: OnEventAccept(ev); break;
