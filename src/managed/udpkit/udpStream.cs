@@ -23,6 +23,7 @@
 */
 
 using System;
+using System.Text;
 
 namespace UdpKit {
     public class UdpStream {
@@ -516,6 +517,30 @@ namespace UdpKit {
             }
 
             Ptr += (count * 8);
+        }
+
+        public void WriteString (string value, Encoding encoding) {
+            int byteCount = encoding.GetByteCount(value);
+
+            WriteInt(byteCount);
+            WriteByteArray(encoding.GetBytes(value));
+        }
+
+        public void WriteString (string value) {
+            WriteString(value, Encoding.UTF8);
+        }
+
+        public string ReadString (Encoding encoding) {
+            int byteCount = ReadInt();
+            var bytes = new byte[byteCount];
+
+            ReadByteArray(bytes);
+
+            return encoding.GetString(bytes);
+        }
+
+        public string ReadString () {
+            return ReadString(Encoding.UTF8);
         }
 
         void InternalWriteByte (byte value, int bits) {
