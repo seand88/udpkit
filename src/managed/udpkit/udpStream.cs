@@ -31,14 +31,6 @@ namespace UdpKit {
         internal int Length;
         internal byte[] Data;
 
-        public bool Done {
-            get { return Ptr == Length; }
-        }
-
-        public bool Overflowing {
-            get { return Ptr > Length; }
-        }
-
         public int Size {
             get { return Length; }
             set { Length = UdpMath.Clamp(value, 0, Data.Length << 3); }
@@ -47,6 +39,14 @@ namespace UdpKit {
         public int Position {
             get { return Ptr; }
             set { Ptr = UdpMath.Clamp(value, 0, Length); }
+        }
+
+        public bool Done {
+            get { return Ptr == Length; }
+        }
+
+        public bool Overflowing {
+            get { return Ptr > Length; }
         }
 
         public byte[] ByteBuffer {
