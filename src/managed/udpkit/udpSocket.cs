@@ -57,6 +57,13 @@ namespace UdpKit {
         readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPointComparer());
 
         /// <summary>
+        /// The current size of the header (in bits)
+        /// </summary>
+        public int HeaderBitSize {
+            get { return UdpHeader.GetSize(this); }
+        }
+
+        /// <summary>
         /// Current amount of connections
         /// </summary>
         public int ConnectionCount {
