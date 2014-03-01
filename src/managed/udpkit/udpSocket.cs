@@ -176,7 +176,7 @@ namespace UdpKit {
 #if DEBUG
             Raise(UdpEvent.INTERNAL_SLEEP, milliseconds);
 #else
-            UdpLog.Warn("Called Sleep in non-debug build not supported");
+            UdpLog.Warn("Calling UdpSocket.Sleep in non-debug build not supported");
 #endif
         }
 
