@@ -38,14 +38,6 @@ namespace UdpKit {
             get { return Ptr > Length; }
         }
 
-        public bool CanWrite {
-            get { return Ptr < Length; }
-        }
-
-        public bool CanRead {
-            get { return Ptr < Length; }
-        }
-
         public int Size {
             get { return Length; }
         }
@@ -69,11 +61,19 @@ namespace UdpKit {
             Length = size << 3;
         }
 
-        public bool CanWriteBits (int bits) {
+        public bool CanWrite () {
+            return CanWrite(1);
+        }
+
+        public bool CanRead () {
+            return CanRead(1);
+        }
+
+        public bool CanWrite (int bits) {
             return Ptr + bits <= Length;
         }
 
-        public bool CanReadBits (int bits) {
+        public bool CanRead (int bits) {
             return Ptr + bits <= Length;
         }
 
@@ -88,7 +88,7 @@ namespace UdpKit {
             Ptr = stream.Ptr;
             Length = stream.Length;
 
-            Array.Copy(stream.Data, 0, Data, 0, Data.Length);
+            Array.Copy(stream.Data, 0, Data, 0, stream.Data.Length);
         }
 
         public bool WriteBool (bool value) {
