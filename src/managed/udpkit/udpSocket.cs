@@ -340,25 +340,27 @@ namespace UdpKit {
         }
 
         void NetworkLoop () {
-            try {
-                UdpLog.Info("socket created");
-                while (state == udpSocketState.Created) {
-                    ProcessIncommingEvents(true);
-                    Thread.Sleep(1);
-                }
+            while (true) {
+                try {
+                    UdpLog.Info("socket created");
+                    while (state == udpSocketState.Created) {
+                        ProcessIncommingEvents(true);
+                        Thread.Sleep(1);
+                    }
 
-                UdpLog.Info("socket started");
-                while (state == udpSocketState.Running) {
-                    RecvDelayedPackets();
-                    RecvNetworkData();
-                    ProcessTimeouts();
-                    ProcessIncommingEvents(false);
-                    frame += 1;
-                }
+                    UdpLog.Info("socket started");
+                    while (state == udpSocketState.Running) {
+                        RecvDelayedPackets();
+                        RecvNetworkData();
+                        ProcessTimeouts();
+                        ProcessIncommingEvents(false);
+                        frame += 1;
+                    }
 
-                UdpLog.Info("socket closed");
-            } catch (Exception exn) {
-                UdpLog.Error(exn.ToString());
+                    UdpLog.Info("socket closed");
+                } catch (Exception exn) {
+                    UdpLog.Error(exn.ToString());
+                }
             }
         }
 
