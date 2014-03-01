@@ -84,13 +84,6 @@ namespace UdpKit {
             Array.Clear(Data, 0, Data.Length);
         }
 
-        public void Copy (UdpStream stream) {
-            Ptr = stream.Ptr;
-            Length = stream.Length;
-
-            Array.Copy(stream.Data, 0, Data, 0, stream.Data.Length);
-        }
-
         public bool WriteBool (bool value) {
 #if TRACE_RW
             if (UdpLog.IsEnabled(UdpLog.TRACE))
