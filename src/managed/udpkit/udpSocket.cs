@@ -348,11 +348,14 @@ namespace UdpKit {
             return cn;
         }
 
-        bool DestroyConnect (UdpConnection cn) {
+        bool DestroyConnection (UdpConnection cn) {
             for (int i = 0; i < connList.Count; ++i) {
                 if (connList[i] == cn) {
                     connList.RemoveAt(i);
+                    connLookup.Remove(cn.RemoteEndPoint);
+
                     cn.Destroy();
+
                     return true;
                 }
             }
@@ -540,7 +543,7 @@ namespace UdpKit {
                             break;
 
                         case UdpConnectionState.Destroy:
-                            if (DestroyConnect(cn)) {
+                            if (DestroyConnection(cn)) {
                                 --i;
                             }
                             break;
