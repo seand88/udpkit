@@ -41,14 +41,17 @@ namespace UdpKit.Examples.Chat {
         }
 
         public void Loop () {
+            int connections = 0;
             UdpEvent ev = default(UdpEvent);
 
             while (true) {
                 while (socket.Poll(ref ev)) {
                     switch (ev.EventType) {
                         case UdpEventType.Connected:
+                            ++connections;
+
                             // log in local console
-                            UdpLog.User("Client connected from {0}, total clients {1}", ev.Connection.RemoteEndPoint, socket.ConnectionCount);
+                            UdpLog.User("Client connected from {0}, total clients {1}", ev.Connection.RemoteEndPoint, connections);
 
                             // send welcome message
                             ev.Connection.Send("Welcome to the chat server!");
@@ -61,8 +64,10 @@ namespace UdpKit.Examples.Chat {
                             break;
 
                         case UdpEventType.Disconnected:
+                            --connections;
+
                             // log in local console
-                            UdpLog.User("Client at {0} disconnected, total clients {1}", ev.Connection.RemoteEndPoint, socket.ConnectionCount);
+                            UdpLog.User("Client at {0} disconnected, total clients {1}", ev.Connection.RemoteEndPoint, connections);
 
                             // remove from client list
                             clients.Remove(ev.Connection);

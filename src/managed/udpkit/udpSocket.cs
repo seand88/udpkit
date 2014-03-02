@@ -79,13 +79,6 @@ namespace UdpKit {
         readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPointComparer());
 
         /// <summary>
-        /// Current amount of connections
-        /// </summary>
-        public int ConnectionCount {
-            get { return connLookup.Count; }
-        }
-
-        /// <summary>
         /// Local endpoint of this socket
         /// </summary>
         public UdpEndPoint EndPoint {

@@ -40,7 +40,7 @@ namespace UdpKit.Examples.Simple {
 #endif
                     }
                 }
-                
+
                 // Simulate ~60fps game loop
                 Thread.Sleep(16);
             }
@@ -64,7 +64,7 @@ namespace UdpKit.Examples.Simple {
 
                     switch (ev.EventType) {
                         case UdpEventType.Connected:
-                            UdpLog.User("Client connected from {0}, total clients connected: {1}", ev.Connection.RemoteEndPoint, server.ConnectionCount);
+                            UdpLog.User("Client connected from {0}", ev.Connection.RemoteEndPoint);
                             break;
 
 #if ENABLE_MANUAL_ACCEPT
@@ -75,7 +75,7 @@ namespace UdpKit.Examples.Simple {
 #endif
                     }
                 }
-                
+
                 // Simulate ~60fps game loop
                 Thread.Sleep(16);
             }
@@ -86,7 +86,7 @@ namespace UdpKit.Examples.Simple {
             Console.WriteLine("Press [S] to start server");
             Console.WriteLine("Press [C] to start client");
             Console.Write("... ");
-            
+
             UdpLog.SetWriter((l, m) => Console.WriteLine(m));
 
             switch (Console.ReadKey(true).Key) {
