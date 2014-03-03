@@ -22,13 +22,14 @@
 * THE SOFTWARE.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
 
 namespace UdpKit {
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
-    public struct UdpIPv4Address {
+    public struct UdpIPv4Address : IEquatable<UdpIPv4Address> {
 
         public class Comparer : IComparer<UdpIPv4Address> {
             int IComparer<UdpIPv4Address>.Compare (UdpIPv4Address x, UdpIPv4Address y) {
@@ -71,6 +72,10 @@ namespace UdpKit {
             Byte2 = b;
             Byte3 = a;
         }
+        
+        public bool Equals (UdpIPv4Address other) {
+            return Compare(this,  other) == 0;
+        }
 
         public override int GetHashCode () {
             return (int) Packed;
@@ -101,6 +106,5 @@ namespace UdpKit {
             if (x.Packed < y.Packed) return -1;
             return 0;
         }
-
     }
 }
