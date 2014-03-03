@@ -22,12 +22,20 @@
 * THE SOFTWARE.
 */
 
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
 
 namespace UdpKit {
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
     public struct UdpIPv4Address {
+
+        public class Comparer : IComparer<UdpIPv4Address> {
+            int IComparer<UdpIPv4Address>.Compare (UdpIPv4Address x, UdpIPv4Address y) {
+                return Compare(x, y);
+            }
+        }
+
         public static readonly UdpIPv4Address Any = new UdpIPv4Address();
         public static readonly UdpIPv4Address Localhost = new UdpIPv4Address(127, 0, 0, 1);
 
