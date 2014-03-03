@@ -119,13 +119,6 @@ namespace UdpKit {
         /// IF we automatically accept incomming connections if we have slots free, default: true
         /// </summary>
         public bool AutoAcceptIncommingConnections = true;
-        
-        /*
-        /// <summary>
-        /// If we should calculate network ping, this adds a 2 byte overhead to each packet, default: true
-        /// </summary>
-        public bool CalculateNetworkPing = true;
-        */
 
         /// <summary>
         /// If we allow clients which are connecting to a server to implicitly accept the connection
@@ -133,13 +126,6 @@ namespace UdpKit {
         /// was lost, default: true
         /// </summary>
         public bool AllowImplicitAccept = true;
-
-        /*
-        /// <summary>
-        /// How many bits we should reserve for acking in the packet header, default: 64
-        /// </summary>
-        public int AckRedundancy = 64;
-        */
 
         /// <summary>
         /// How large the event queues should by default, default: 4096
