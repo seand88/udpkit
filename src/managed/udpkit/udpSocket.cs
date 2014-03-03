@@ -52,7 +52,7 @@ namespace UdpKit {
         public static bool CalculateNetworkPing {
             get { return true; }
         }
-        
+
         /// <summary>
         /// The size of the udpkit internal header sent with each packet
         /// </summary>
@@ -71,6 +71,7 @@ namespace UdpKit {
         readonly UdpPlatform platform;
         readonly UdpStream readStream;
         readonly UdpStream writeStream;
+        readonly UdpConfig configCopy;
         readonly Queue<UdpEvent> eventQueueIn;
         readonly Queue<UdpEvent> eventQueueOut;
         readonly UdpSerializerFactory serializerFactory;
@@ -92,10 +93,19 @@ namespace UdpKit {
             get { return stats; }
         }
 
+        /// <summary>
+        /// Returns a copy of the active configuration.
+        /// Changing values on this copy does nothing.
+        /// </summary>
+        public UdpConfig ConfigCopy {
+            get { return this.configCopy; }
+        }
+
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
             this.Config = config.Duplicate();
+            this.configCopy = config;
 
             state = UdpSocketState.Created;
             random = new Random();
