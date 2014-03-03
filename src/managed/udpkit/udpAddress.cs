@@ -32,7 +32,7 @@ namespace UdpKit {
         public static readonly UdpIPv4Address Localhost = new UdpIPv4Address(127, 0, 0, 1);
 
         [FieldOffset(0)]
-        public readonly uint Packet;
+        public readonly uint Packed;
         [FieldOffset(0)]
         public readonly byte Byte0;
         [FieldOffset(1)]
@@ -44,12 +44,12 @@ namespace UdpKit {
 
         public UdpIPv4Address (long addr) {
             Byte0 = Byte1 = Byte2 = Byte3 = 0;
-            Packet = (uint) IPAddress.NetworkToHostOrder((int) addr);
+            Packed = (uint) IPAddress.NetworkToHostOrder((int) addr);
         }
 
         public UdpIPv4Address (string ip) {
             string[] parts = ip.Split('.');
-            Packet = 0;
+            Packed = 0;
             Byte0 = byte.Parse(parts[3]);
             Byte1 = byte.Parse(parts[2]);
             Byte2 = byte.Parse(parts[1]);
@@ -57,7 +57,7 @@ namespace UdpKit {
         }
 
         public UdpIPv4Address (byte a, byte b, byte c, byte d) {
-            Packet = 0;
+            Packed = 0;
             Byte0 = d;
             Byte1 = c;
             Byte2 = b;
@@ -65,7 +65,7 @@ namespace UdpKit {
         }
 
         public override int GetHashCode () {
-            return (int) Packet;
+            return (int) Packed;
         }
 
         public override bool Equals (object obj) {
@@ -89,8 +89,8 @@ namespace UdpKit {
         }
 
         static int Compare (UdpIPv4Address x, UdpIPv4Address y) {
-            if (x.Packet > y.Packet) return 1;
-            if (x.Packet < y.Packet) return -1;
+            if (x.Packed > y.Packed) return 1;
+            if (x.Packed < y.Packed) return -1;
             return 0;
         }
 

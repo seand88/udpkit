@@ -44,7 +44,7 @@ namespace UdpKit {
         }
 
         public override int GetHashCode () {
-            return (int) (Address.Packet ^ Port);
+            return (int) (Address.Packed ^ Port);
         }
 
         public override bool Equals (object obj) {
@@ -68,8 +68,8 @@ namespace UdpKit {
         }
 
         internal static int Compare (UdpEndPoint x, UdpEndPoint y) {
-            if (x.Address.Packet > y.Address.Packet) return 1;
-            if (x.Address.Packet < y.Address.Packet) return -1;
+            if (x.Address.Packed > y.Address.Packed) return 1;
+            if (x.Address.Packed < y.Address.Packed) return -1;
 
             if (x.Port > y.Port) return 1;
             if (x.Port < y.Port) return -1;

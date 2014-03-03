@@ -134,7 +134,7 @@ namespace UdpKit {
         }
 
         IPEndPoint ConvertEndPoint (UdpEndPoint endpoint) {
-            long netOrder = IPAddress.HostToNetworkOrder((int) endpoint.Address.Packet);
+            long netOrder = IPAddress.HostToNetworkOrder((int) endpoint.Address.Packed);
             convertAddress.Address = netOrder;
             convertEndPoint.Address = convertAddress;
             convertEndPoint.Port = endpoint.Port;
