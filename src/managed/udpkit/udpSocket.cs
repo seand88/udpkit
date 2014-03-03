@@ -29,7 +29,7 @@ using System.Threading;
 
 namespace UdpKit {
 
-    enum udpSocketState : int {
+    enum UdpSocketState : int {
         None = 0,
         Created = 1,
         Running = 2,
@@ -63,7 +63,7 @@ namespace UdpKit {
         readonly internal UdpConfig Config;
 
         volatile int frame;
-        volatile udpSocketState state;
+        volatile UdpSocketState state;
 
         readonly Random random;
         readonly UdpStats stats;
@@ -97,7 +97,7 @@ namespace UdpKit {
             this.serializerFactory = serializerFactory;
             this.Config = config.Duplicate();
 
-            state = udpSocketState.Created;
+            state = UdpSocketState.Created;
             random = new Random();
             stats = new UdpStats();
 
@@ -243,7 +243,7 @@ namespace UdpKit {
         }
 
         internal bool Send (UdpEndPoint endpoint, byte[] buffer, int length) {
-            if (state == udpSocketState.Running || state == udpSocketState.Created) {
+            if (state == UdpSocketState.Running || state == UdpSocketState.Created) {
                 int bytesSent = 0;
                 return platform.SendTo(buffer, length, endpoint, ref bytesSent);
             }
@@ -312,7 +312,7 @@ namespace UdpKit {
             }
         }
 
-        bool ChangeState (udpSocketState from, udpSocketState to) {
+        bool ChangeState (UdpSocketState from, UdpSocketState to) {
             if (CheckState(from)) {
                 state = to;
                 return true;
@@ -321,7 +321,7 @@ namespace UdpKit {
             return false;
         }
 
-        bool CheckState (udpSocketState s) {
+        bool CheckState (UdpSocketState s) {
             if (state != s) {
                 return false;
             }
@@ -358,16 +358,16 @@ namespace UdpKit {
         }
 
         void NetworkLoop () {
-            while (true) {
+            while (state == UdpSocketState.Created || state == UdpSocketState.Running) {
                 try {
                     UdpLog.Info("socket created");
-                    while (state == udpSocketState.Created) {
+                    while (state == UdpSocketState.Created) {
                         ProcessIncommingEvents(true);
                         Thread.Sleep(1);
                     }
 
                     UdpLog.Info("socket started");
-                    while (state == udpSocketState.Running) {
+                    while (state == UdpSocketState.Running) {
                         RecvDelayedPackets();
                         RecvNetworkData();
                         ProcessTimeouts();
@@ -420,7 +420,7 @@ namespace UdpKit {
         }
 
         void OnEventStart (UdpEvent ev) {
-            if (ChangeState(udpSocketState.Created, udpSocketState.Running)) {
+            if (ChangeState(UdpSocketState.Created, UdpSocketState.Running)) {
                 if (platform.Bind(ev.EndPoint)) {
                     UdpLog.Info("socket bound to {0}", platform.EndPoint.ToString());
                 } else {
@@ -430,7 +430,7 @@ namespace UdpKit {
         }
 
         void OnEventConnect (UdpEvent ev) {
-            if (CheckState(udpSocketState.Running)) {
+            if (CheckState(UdpSocketState.Running)) {
                 UdpConnection cn = CreateConnection(ev.EndPoint, UdpConnectionMode.Client);
 
                 if (cn == null) {
@@ -442,7 +442,7 @@ namespace UdpKit {
         }
 
         void OnEventConnectCancel (UdpEvent ev) {
-            if (CheckState(udpSocketState.Running)) {
+            if (CheckState(UdpSocketState.Running)) {
                 UdpConnection cn;
 
                 if (connLookup.TryGetValue(ev.EndPoint, out cn)) {
@@ -477,7 +477,7 @@ namespace UdpKit {
         }
 
         void OnEventClose (UdpEvent ev) {
-            if (ChangeState(udpSocketState.Running, udpSocketState.Shutdown)) {
+            if (ChangeState(UdpSocketState.Running, UdpSocketState.Shutdown)) {
                 for (int i = 0; i < connList.Count; ++i) {
                     UdpConnection cn = connList[i];
                     cn.SendCommand(UdpCommandType.Disconnected);
