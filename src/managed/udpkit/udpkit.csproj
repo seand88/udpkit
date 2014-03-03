@@ -54,7 +54,6 @@
     <Compile Include="udpLog.cs" />
     <Compile Include="udpMath.cs" />
     <Compile Include="udpPlatform.cs" />
-    <Compile Include="udpPrecisionTimer.cs" />
     <Compile Include="udpRingBuffer.cs" />
     <Compile Include="udpSendHandle.cs" />
     <Compile Include="udpSerializer.cs" />
