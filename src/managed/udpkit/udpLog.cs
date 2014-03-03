@@ -55,7 +55,11 @@ namespace UdpKit {
         }
 
         static string ThreadName () {
+#if DEBUG
             return " | thread #" + Thread.CurrentThread.ManagedThreadId.ToString().PadLeft(3, '0');
+#else
+            return "";
+#endif
         }
 
         static public void Info (string format, params object[] args) {
@@ -85,7 +89,6 @@ namespace UdpKit {
         }
 
         static public void Warn (string format, params object[] args) {
-
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.WARN)) {
 #if DEBUG
                 Write(WARN, String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args), "\r\n", Environment.StackTrace));
