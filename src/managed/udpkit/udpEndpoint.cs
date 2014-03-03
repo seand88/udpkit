@@ -54,7 +54,7 @@ namespace UdpKit {
             this.Address = address;
             this.Port = port;
         }
-        
+
         public int CompareTo (UdpEndPoint other) {
             return Compare(this, other);
         }
@@ -88,13 +88,13 @@ namespace UdpKit {
         }
 
         static int Compare (UdpEndPoint x, UdpEndPoint y) {
-            if (x.Address.Packed > y.Address.Packed) return 1;
-            if (x.Address.Packed < y.Address.Packed) return -1;
+            int cmp = x.Address.CompareTo(y.Address);
 
-            if (x.Port > y.Port) return 1;
-            if (x.Port < y.Port) return -1;
+            if (cmp == 0) {
+                cmp = x.Port.CompareTo(y.Port);
+            }
 
-            return 0;
+            return cmp;
         }
 
     }
