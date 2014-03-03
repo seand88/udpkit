@@ -83,10 +83,18 @@ namespace UdpKit {
         public uint RecvWithoutAckLimit = 8;
 
         /// <summary>
-        /// How many % of the packets we should drop to simulate packet loss, default: 0
+        /// How many % of the packets we should drop to simulate packet loss, default: 0. Only used in DEBUG builds.
         /// </summary>
         public float SimulatedLoss = 0f;
+
+        /// <summary>
+        /// Min ping we should simulate, default: 0 (ms). Only used in DEBUG builds.
+        /// </summary>
         public int SimulatedPingMin = 0;
+
+        /// <summary>
+        /// Max ping we should simulate, default: 0 (ms). Only used in DEBUG builds.
+        /// </summary>
         public int SimulatedPingMax = 0;
 
         /// <summary>
