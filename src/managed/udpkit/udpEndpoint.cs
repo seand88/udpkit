@@ -29,7 +29,6 @@ using System.Runtime.InteropServices;
 namespace UdpKit {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct UdpEndPoint : IEquatable<UdpEndPoint>, IComparable<UdpEndPoint> {
-
         public class Comparer : IEqualityComparer<UdpEndPoint> {
             bool IEqualityComparer<UdpEndPoint>.Equals (UdpEndPoint x, UdpEndPoint y) {
                 return UdpEndPoint.Compare(x, y) == 0;
@@ -41,6 +40,7 @@ namespace UdpKit {
         }
 
         public static readonly UdpEndPoint Any = new UdpEndPoint(UdpIPv4Address.Any, 0);
+
         public readonly UdpIPv4Address Address;
         public readonly ushort Port;
 
@@ -96,6 +96,5 @@ namespace UdpKit {
 
             return cmp;
         }
-
     }
 }

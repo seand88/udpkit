@@ -30,7 +30,6 @@ using System.Runtime.InteropServices;
 namespace UdpKit {
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
     public struct UdpIPv4Address : IEquatable<UdpIPv4Address>, IComparable<UdpIPv4Address> {
-
         public class Comparer : IComparer<UdpIPv4Address>, IEqualityComparer<UdpIPv4Address> {
             int IComparer<UdpIPv4Address>.Compare (UdpIPv4Address x, UdpIPv4Address y) {
                 return Compare(x, y);
@@ -118,6 +117,5 @@ namespace UdpKit {
             if (x.Packed < y.Packed) return -1;
             return 0;
         }
-
     }
 }
