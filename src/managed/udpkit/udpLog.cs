@@ -70,8 +70,10 @@ namespace UdpKit {
 
         [Conditional("TRACE")]
         static public void Trace (string format, params object[] args) {
+#if TRACE
             if (UdpMath.IsSet(UdpLog.enabled, UdpLog.TRACE))
                 Write(TRACE, String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
+#endif
         }
 
         [Conditional("DEBUG")]
