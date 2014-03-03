@@ -376,6 +376,8 @@ namespace UdpKit {
                     }
 
                     UdpLog.Info("socket closed");
+                    return;
+
                 } catch (Exception exn) {
                     UdpLog.Error(exn.ToString());
                 }
