@@ -22,12 +22,24 @@
 * THE SOFTWARE.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace UdpKit {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct UdpEndPoint {
+    public struct UdpEndPoint : IEquatable<UdpEndPoint>, IComparable<UdpEndPoint> {
+
+        public class Comparer : IEqualityComparer<UdpEndPoint> {
+            bool IEqualityComparer<UdpEndPoint>.Equals (UdpEndPoint x, UdpEndPoint y) {
+                return UdpEndPoint.Compare(x, y) == 0;
+            }
+
+            int IEqualityComparer<UdpEndPoint>.GetHashCode (UdpEndPoint obj) {
+                return obj.GetHashCode();
+            }
+        }
+
         public static readonly UdpEndPoint Any = new UdpEndPoint(UdpIPv4Address.Any, 0);
         public readonly UdpIPv4Address Address;
         public readonly ushort Port;
@@ -41,6 +53,14 @@ namespace UdpKit {
         public UdpEndPoint (UdpIPv4Address address, ushort port) {
             this.Address = address;
             this.Port = port;
+        }
+        
+        public int CompareTo (UdpEndPoint other) {
+            return Compare(this, other);
+        }
+
+        public bool Equals (UdpEndPoint other) {
+            return Compare(this, other) == 0;
         }
 
         public override int GetHashCode () {
@@ -67,7 +87,7 @@ namespace UdpKit {
             return Compare(x, y) != 0;
         }
 
-        internal static int Compare (UdpEndPoint x, UdpEndPoint y) {
+        static int Compare (UdpEndPoint x, UdpEndPoint y) {
             if (x.Address.Packed > y.Address.Packed) return 1;
             if (x.Address.Packed < y.Address.Packed) return -1;
 
@@ -76,15 +96,6 @@ namespace UdpKit {
 
             return 0;
         }
-    }
 
-    public class UdpEndPointComparer : IEqualityComparer<UdpEndPoint> {
-        bool IEqualityComparer<UdpEndPoint>.Equals (UdpEndPoint x, UdpEndPoint y) {
-            return UdpEndPoint.Compare(x, y) == 0;
-        }
-
-        int IEqualityComparer<UdpEndPoint>.GetHashCode (UdpEndPoint obj) {
-            return obj.GetHashCode();
-        }
     }
 }

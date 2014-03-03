@@ -29,11 +29,19 @@ using System.Runtime.InteropServices;
 
 namespace UdpKit {
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
-    public struct UdpIPv4Address : IEquatable<UdpIPv4Address> {
+    public struct UdpIPv4Address : IEquatable<UdpIPv4Address>, IComparable<UdpIPv4Address> {
 
-        public class Comparer : IComparer<UdpIPv4Address> {
+        public class Comparer : IComparer<UdpIPv4Address>, IEqualityComparer<UdpIPv4Address> {
             int IComparer<UdpIPv4Address>.Compare (UdpIPv4Address x, UdpIPv4Address y) {
                 return Compare(x, y);
+            }
+
+            bool IEqualityComparer<UdpIPv4Address>.Equals (UdpIPv4Address x, UdpIPv4Address y) {
+                return Compare(x, y) == 0;
+            }
+
+            int IEqualityComparer<UdpIPv4Address>.GetHashCode (UdpIPv4Address obj) {
+                return (int) obj.Packed;
             }
         }
 
@@ -72,9 +80,13 @@ namespace UdpKit {
             Byte2 = b;
             Byte3 = a;
         }
-        
+
         public bool Equals (UdpIPv4Address other) {
-            return Compare(this,  other) == 0;
+            return Compare(this, other) == 0;
+        }
+        
+        public int CompareTo (UdpIPv4Address other) {
+            return Compare(this, other);
         }
 
         public override int GetHashCode () {
@@ -106,5 +118,6 @@ namespace UdpKit {
             if (x.Packed < y.Packed) return -1;
             return 0;
         }
+
     }
 }

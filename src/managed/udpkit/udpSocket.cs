@@ -75,8 +75,8 @@ namespace UdpKit {
         readonly Queue<UdpEvent> eventQueueOut;
         readonly UdpSerializerFactory serializerFactory;
         readonly List<UdpConnection> connList = new List<UdpConnection>();
-        readonly UdpSet<UdpEndPoint> pendingConnections = new UdpSet<UdpEndPoint>(new UdpEndPointComparer());
-        readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPointComparer());
+        readonly UdpSet<UdpEndPoint> pendingConnections = new UdpSet<UdpEndPoint>(new UdpEndPoint.Comparer());
+        readonly Dictionary<UdpEndPoint, UdpConnection> connLookup = new Dictionary<UdpEndPoint, UdpConnection>(new UdpEndPoint.Comparer());
 
         /// <summary>
         /// Local endpoint of this socket
