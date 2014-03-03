@@ -62,12 +62,6 @@ namespace UdpKit {
             }
         }
 
-        /*
-        public static int GetSize (UdpSocket socket) {
-            return 16 + 16 + socket.Config.AckRedundancy + (socket.Config.CalculateNetworkPing ? 16 : 0);
-        }
-        */
-
         ushort PadSequence (ushort sequence) {
             sequence <<= SEQ_PADD;
 
