@@ -7,7 +7,7 @@
     <ProjectGuid>{E9B81583-7917-4A90-BC43-76D64D8CC705}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>udpkit.example.simple</RootNamespace>
+    <RootNamespace>UdpKit.Examples.Simple</RootNamespace>
     <AssemblyName>udpkit.example.simple</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

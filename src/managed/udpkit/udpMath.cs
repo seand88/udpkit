@@ -24,6 +24,10 @@
 
 namespace UdpKit {
     internal static class UdpMath {
+        internal static bool IsPowerOfTwo (uint x) {
+            return (x != 0) && ((x & (x - 1)) == 0);
+        }
+
         internal static bool IsSet (uint mask, uint flag) {
             return (mask & flag) == flag;
         }
@@ -73,7 +77,7 @@ namespace UdpKit {
             seq &= mask;
             return seq;
         }
-        
+
         internal static ushort Clamp (ushort value, ushort min, ushort max) {
             if (value < min)
                 return min;
@@ -93,7 +97,7 @@ namespace UdpKit {
 
             return value;
         }
-        
+
         internal static int Clamp (int value, int min, int max) {
             if (value < min)
                 return min;

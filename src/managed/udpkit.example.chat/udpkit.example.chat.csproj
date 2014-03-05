@@ -7,7 +7,7 @@
     <ProjectGuid>{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>udpkit.example.chat</RootNamespace>
+    <RootNamespace>UdpKit.Examples.Chat</RootNamespace>
     <AssemblyName>udpkit.example.chat</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
