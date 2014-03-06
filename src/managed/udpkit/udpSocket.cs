@@ -24,12 +24,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 
 namespace UdpKit {
-
-    enum UdpSocketState : int {
+    public enum UdpSocketState : int {
         None = 0,
         Created = 1,
         Running = 2,
@@ -84,6 +82,13 @@ namespace UdpKit {
         /// </summary>
         public UdpEndPoint EndPoint {
             get { return platform.EndPoint; }
+        }
+
+        /// <summary>
+        /// The current state of the socket
+        /// </summary>
+        public UdpSocketState State {
+            get { return state; }
         }
 
         /// <summary>
@@ -179,7 +184,7 @@ namespace UdpKit {
 #if DEBUG
             Raise(UdpEvent.INTERNAL_SLEEP, milliseconds);
 #else
-            UdpLog.Warn("Calling UdpSocket.Sleep in non-debug build not supported");
+            UdpLog.Warn("Calling UdpSocket.Sleep in non-debug build is not supported");
 #endif
         }
 
