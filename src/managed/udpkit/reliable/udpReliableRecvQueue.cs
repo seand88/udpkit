@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace UdpKit {
-
     class UdpReliableRecvQueue<T> where T : IUdpSequencedObject {
         struct Node {
             public bool Received;

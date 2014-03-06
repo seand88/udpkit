@@ -36,13 +36,14 @@ namespace UdpKit {
             this.sockets = sockets;
         }
 
-        public bool Poll (ref UdpEvent ev) {
+        public bool Poll (ref UdpEvent ev, ref UdpSocket socket) {
             bool allowRestart = (index != 0);
 
         RESTART:
             for (int i = index; i < sockets.Length; ++i) {
                 if (sockets[i].Poll(ref ev)) {
                     index = i + 1;
+                    socket = sockets[i];
                     return true;
                 }
             }
@@ -53,6 +54,8 @@ namespace UdpKit {
                 goto RESTART;
             }
 
+            ev = default(UdpEvent);
+            socket = null;
             return false;
         }
     }
