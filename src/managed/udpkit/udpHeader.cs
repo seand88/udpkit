@@ -27,6 +27,7 @@ namespace UdpKit {
         public const int SEQ_BITS = 15;
         public const int SEQ_PADD = 16 - SEQ_BITS;
         public const int SEQ_MASK = (1 << SEQ_BITS) - 1;
+        public const int NETPING_BITS = 16;
 
         public ushort ObjSequence;
         public ushort AckSequence;
@@ -36,15 +37,15 @@ namespace UdpKit {
         public uint Now;
 
         public void Pack (UdpStream buffer, UdpSocket socket) {
-            var pos = buffer.Position;
+            int pos = buffer.Position;
 
             buffer.Position = 0;
-            buffer.WriteUShort(PadSequence(ObjSequence), 16);
-            buffer.WriteUShort(PadSequence(AckSequence), 16);
+            buffer.WriteUShort(PadSequence(ObjSequence), SEQ_BITS + SEQ_PADD);
+            buffer.WriteUShort(PadSequence(AckSequence), SEQ_BITS + SEQ_PADD);
             buffer.WriteULong(AckHistory, UdpSocket.AckRedundancy);
 
             if (UdpSocket.CalculateNetworkPing) {
-                buffer.WriteUShort(AckTime, 16);
+                buffer.WriteUShort(AckTime, NETPING_BITS);
             }
 
             buffer.Position = pos;
@@ -53,12 +54,12 @@ namespace UdpKit {
         public void Unpack (UdpStream buffer, UdpSocket socket) {
             buffer.Position = 0;
 
-            ObjSequence = TrimSequence(buffer.ReadUShort(16));
-            AckSequence = TrimSequence(buffer.ReadUShort(16));
+            ObjSequence = TrimSequence(buffer.ReadUShort(SEQ_BITS + SEQ_PADD));
+            AckSequence = TrimSequence(buffer.ReadUShort(SEQ_BITS + SEQ_PADD));
             AckHistory = buffer.ReadULong(UdpSocket.AckRedundancy);
 
             if (UdpSocket.CalculateNetworkPing) {
-                AckTime = buffer.ReadUShort(16);
+                AckTime = buffer.ReadUShort(NETPING_BITS);
             }
         }
 
