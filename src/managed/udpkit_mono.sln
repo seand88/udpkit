@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit", "udpkit\udpkit_mono.csproj", "{66A5F183-3065-4A77-A109-779D7984990F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "platforms", "platforms", "{3EDF05EA-0797-49D8-96A9-B29AD6F53AFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit.platform.managed", "udpkit.platform.managed\udpkit.platform.managed_mono.csproj", "{B23EC683-547C-442E-8D74-3256397BF9BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit.platform.ios", "udpkit.platform.ios\udpkit.platform.ios_mono.csproj", "{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit.platform.android", "udpkit.platform.android\udpkit.platform.android_mono.csproj", "{744A90F9-1303-48E1-96ED-2377F1EF293D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{130D25D9-F490-44B9-BF6E-E03AD5A93FC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit.example.simple", "udpkit.example.simple\udpkit.example.simple_mono.csproj", "{E9B81583-7917-4A90-BC43-76D64D8CC705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpkit.example.chat", "udpkit.example.chat\udpkit.example.chat_mono.csproj", "{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66A5F183-3065-4A77-A109-779D7984990F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A5F183-3065-4A77-A109-779D7984990F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A5F183-3065-4A77-A109-779D7984990F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A5F183-3065-4A77-A109-779D7984990F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B23EC683-547C-442E-8D74-3256397BF9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B23EC683-547C-442E-8D74-3256397BF9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B23EC683-547C-442E-8D74-3256397BF9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B23EC683-547C-442E-8D74-3256397BF9BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744A90F9-1303-48E1-96ED-2377F1EF293D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744A90F9-1303-48E1-96ED-2377F1EF293D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744A90F9-1303-48E1-96ED-2377F1EF293D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744A90F9-1303-48E1-96ED-2377F1EF293D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9B81583-7917-4A90-BC43-76D64D8CC705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9B81583-7917-4A90-BC43-76D64D8CC705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9B81583-7917-4A90-BC43-76D64D8CC705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9B81583-7917-4A90-BC43-76D64D8CC705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B23EC683-547C-442E-8D74-3256397BF9BF} = {3EDF05EA-0797-49D8-96A9-B29AD6F53AFB}
+		{1B83D318-C51E-4B39-9E5C-6D3F7EE16B9A} = {3EDF05EA-0797-49D8-96A9-B29AD6F53AFB}
+		{744A90F9-1303-48E1-96ED-2377F1EF293D} = {3EDF05EA-0797-49D8-96A9-B29AD6F53AFB}
+		{E9B81583-7917-4A90-BC43-76D64D8CC705} = {130D25D9-F490-44B9-BF6E-E03AD5A93FC1}
+		{3D8EDD92-AD03-47C4-9E25-69F1CBBBD7AC} = {130D25D9-F490-44B9-BF6E-E03AD5A93FC1}
+	EndGlobalSection
+EndGlobal
