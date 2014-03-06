@@ -37,7 +37,7 @@ namespace UdpKit {
 
         /// <summary>
         /// The amount of redundant acks we should do, valid values are:
-        /// 8, 16, 24, 32, 40, 48, 56, 64.
+        /// 8, 16, 24, 32, 40, 48, 56, 64
         /// </summary>
         public static int AckRedundancy {
             // do not change this number unless you know EXACTLY what you are doings
@@ -45,7 +45,7 @@ namespace UdpKit {
         }
 
         /// <summary>
-        /// If we should calculate network ping or not.
+        /// If we should calculate network ping or not
         /// </summary>
         public static bool CalculateNetworkPing {
             // do not change this boolean unless you know EXACTLY what you are doings
@@ -53,7 +53,7 @@ namespace UdpKit {
         }
 
         /// <summary>
-        /// The size of the udpkit internal header sent with each packet.xs
+        /// The size of the udpkit internal header sent with each packet
         /// </summary>
         public static int HeaderBitSize {
             // do not change this code unless you know EXACTLY what you are doings
