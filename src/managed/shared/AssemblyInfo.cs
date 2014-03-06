@@ -17,9 +17,6 @@ using System.Runtime.InteropServices;
 #elif UDPKIT_DLL_PLATFORM_MANAGED
 [assembly: AssemblyTitle("udpkit.platform.managed")]
 [assembly: AssemblyProduct("udpkit.platform.managed")]
-#elif UDPKIT_DLL_UNITY
-[assembly: AssemblyTitle("udpkit.unity")]
-[assembly: AssemblyProduct("udpkit.unity")]
 #endif
 
 [assembly: AssemblyDescription(".Net/Mono/Unity networking library for games")]
@@ -29,5 +26,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("0.1.6.1")]
-[assembly: AssemblyFileVersion("0.1.6.1")]
+[assembly: AssemblyVersion("0.1.6.2")]
+[assembly: AssemblyFileVersion("0.1.6.2")]
