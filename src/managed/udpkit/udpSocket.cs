@@ -93,7 +93,7 @@ namespace UdpKit {
         /// <summary>
         /// Statistics for the entire socket
         /// </summary>
-        public UdpStats Stats {
+        public UdpStats Statistics {
             get { return stats; }
         }
 

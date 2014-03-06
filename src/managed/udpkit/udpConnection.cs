@@ -131,7 +131,7 @@ namespace UdpKit {
         /// <summary>
         /// Statistics of this connection
         /// </summary>
-        public UdpStats Stats {
+        public UdpStats Statistics {
             get { return stats; }
         }
 
@@ -274,7 +274,7 @@ namespace UdpKit {
         internal void OnPacket (UdpStream buffer) {
             // track stats
             stats.PacketReceived((uint) buffer.Length >> 3);
-            socket.Stats.PacketReceived((uint) buffer.Length >> 3);
+            socket.Statistics.PacketReceived((uint) buffer.Length >> 3);
 
             // set recv time of for last packet
             recvTime = socket.GetCurrentTime();
@@ -339,7 +339,7 @@ namespace UdpKit {
                     if (SendStream(stream, handle, alwaysSendMtu)) {
                         // track stats
                         stats.PacketSent((uint) stream.Ptr >> 3);
-                        socket.Stats.PacketSent((uint) stream.Ptr >> 3);
+                        socket.Statistics.PacketSent((uint) stream.Ptr >> 3);
 
                         // push object to user thread
                         socket.Raise(UdpEvent.PUBLIC_OBJECT_SENT, this, obj);
@@ -367,7 +367,7 @@ namespace UdpKit {
                 if (SendStream(stream, handle, false)) {
                     // track stats
                     stats.PacketSent((uint) stream.Ptr >> 3);
-                    socket.Stats.PacketSent((uint) stream.Ptr >> 3);
+                    socket.Statistics.PacketSent((uint) stream.Ptr >> 3);
 
                 } else {
                     // should we do something here?????
@@ -612,7 +612,7 @@ namespace UdpKit {
                     if (seqDistance <= -UdpSocket.AckRedundancy) {
                         // track stats
                         stats.PacketLost();
-                        socket.Stats.PacketLost();
+                        socket.Statistics.PacketLost();
 
                         // handle lost
                         ObjectLost(handle.Object);
@@ -621,7 +621,7 @@ namespace UdpKit {
                     if ((header.AckHistory & (1UL << -seqDistance)) != 0UL) {
                         // track stats
                         stats.PacketDelivered();
-                        socket.Stats.PacketDelivered();
+                        socket.Statistics.PacketDelivered();
 
                         // handle delivered objects
                         ObjectDelivered(handle.Object);
@@ -629,7 +629,7 @@ namespace UdpKit {
                     } else {
                         // track stats
                         stats.PacketLost();
-                        socket.Stats.PacketLost();
+                        socket.Statistics.PacketLost();
 
                         // handle
                         ObjectLost(handle.Object);
