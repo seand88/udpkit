@@ -105,6 +105,13 @@ namespace UdpKit {
             get { return this.configCopy; }
         }
 
+        /// <summary>
+        /// The precision time (in ms) of the underlying socket platform
+        /// </summary>
+        public uint PrecisionTime {
+            get { return GetCurrentTime(); }
+        }
+
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
