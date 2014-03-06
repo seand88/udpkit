@@ -28,10 +28,9 @@ using System.Threading;
 
 namespace UdpKit {
     public enum UdpSocketState : int {
-        None = 0,
-        Created = 1,
-        Running = 2,
-        Shutdown = 3
+        Created = 0,
+        Running = 1,
+        Shutdown = 2
     }
 
     public partial class UdpSocket {
