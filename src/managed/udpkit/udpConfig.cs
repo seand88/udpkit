@@ -53,9 +53,9 @@ namespace UdpKit {
 
         /// <summary>
         /// If we should flip the AutoResetEvent which signals to the
-        /// user thread if we have pending events, default: true
+        /// user thread if we have available events on a socket, default: true
         /// </summary>
-        public bool UsePendingEventEvent = true;
+        public bool UseAvailableEventEvent = true;
 
         /// <summary>
         /// The max ping allowed for a connection, default: 4000 (milliseconds)

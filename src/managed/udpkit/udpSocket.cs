@@ -326,7 +326,7 @@ namespace UdpKit {
                     eventQueueOut.Enqueue(ev);
                 }
 
-                if (Config.UsePendingEventEvent) {
+                if (Config.UseAvailableEventEvent) {
                     availableEvent.Set();
                 }
             }
