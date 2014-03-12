@@ -72,6 +72,7 @@ namespace UdpKit {
         readonly UdpStream readStream;
         readonly UdpStream writeStream;
         readonly UdpConfig configCopy;
+        readonly AutoResetEvent availableEvent;
         readonly Queue<UdpEvent> eventQueueIn;
         readonly Queue<UdpEvent> eventQueueOut;
         readonly UdpSerializerFactory serializerFactory;
@@ -115,6 +116,13 @@ namespace UdpKit {
             get { return GetCurrentTime(); }
         }
 
+        /// <summary>
+        /// A thread can wait on this event before calling Poll to make sure at least one event is available
+        /// </summary>
+        public AutoResetEvent EventsAvailable {
+            get { return availableEvent;  }
+        }
+
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {
             this.platform = platform;
             this.serializerFactory = serializerFactory;
@@ -124,6 +132,7 @@ namespace UdpKit {
             state = UdpSocketState.Created;
             random = new Random();
             stats = new UdpStats();
+            availableEvent = new AutoResetEvent(false);
 
             readStream = new UdpStream(new byte[config.MtuMax * 2]);
             writeStream = new UdpStream(new byte[config.MtuMax * 2]);
@@ -315,6 +324,10 @@ namespace UdpKit {
             } else {
                 lock (eventQueueOut) {
                     eventQueueOut.Enqueue(ev);
+                }
+
+                if (Config.UsePendingEventEvent) {
+                    availableEvent.Set();
                 }
             }
         }

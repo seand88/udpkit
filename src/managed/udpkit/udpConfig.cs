@@ -52,6 +52,12 @@ namespace UdpKit {
         public bool AllowPacketOverflow = false;
 
         /// <summary>
+        /// If we should flip the AutoResetEvent which signals to the
+        /// user thread if we have pending events, default: true
+        /// </summary>
+        public bool UsePendingEventEvent = true;
+
+        /// <summary>
         /// The max ping allowed for a connection, default: 4000 (milliseconds)
         /// </summary>
         public uint MaxPing = 4000;
