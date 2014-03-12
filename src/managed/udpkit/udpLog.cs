@@ -42,8 +42,8 @@ namespace UdpKit {
         static readonly object sync = new object();
 
         static void Write (uint level, string message) {
-            lock (UdpLog.sync) {
-                Writer callback = UdpLog.writer;
+            lock (sync) {
+                Writer callback = writer;
 
                 if (callback != null)
                     callback(level, message);
@@ -63,19 +63,19 @@ namespace UdpKit {
         }
 
         static public void Info (string format, params object[] args) {
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.INFO))
+            if (UdpMath.IsSet(enabled, INFO))
                 Write(INFO, String.Concat(Time(), ThreadName(), " | info  | ", String.Format(format, args)));
         }
 
         static public void User (string format, params object[] args) {
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.INFO))
+            if (UdpMath.IsSet(enabled, INFO))
                 Write(USER, String.Concat(Time(), ThreadName(), " | user  | ", String.Format(format, args)));
         }
 
         [Conditional("TRACE")]
         static public void Trace (string format, params object[] args) {
 #if TRACE
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.TRACE))
+            if (UdpMath.IsSet(enabled, TRACE))
                 Write(TRACE, String.Concat(Time(), ThreadName(), " | trace | ", String.Format(format, args)));
 #endif
         }
@@ -83,13 +83,13 @@ namespace UdpKit {
         [Conditional("DEBUG")]
         static public void Debug (string format, params object[] args) {
 #if DEBUG
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.DEBUG))
+            if (UdpMath.IsSet(enabled, DEBUG))
                 Write(DEBUG, String.Concat(Time(), ThreadName(), " | debug | ", String.Format(format, args)));
 #endif
         }
 
         static public void Warn (string format, params object[] args) {
-            if (UdpMath.IsSet(UdpLog.enabled, UdpLog.WARN)) {
+            if (UdpMath.IsSet(enabled, WARN)) {
 #if DEBUG
                 Write(WARN, String.Concat(Time(), ThreadName(), " | warn  | ", String.Format(format, args), "\r\n", Environment.StackTrace));
 #else
@@ -107,7 +107,7 @@ namespace UdpKit {
         }
 
         static public void SetWriter (UdpLog.Writer callback) {
-            UdpLog.writer = callback;
+            writer = callback;
         }
 
         static public void Disable (uint flag) {
