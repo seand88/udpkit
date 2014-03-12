@@ -1,7 +1,7 @@
 ﻿/*
 * The MIT License (MIT)
 * 
-* Copyright (c) 2012-2013 Fredrik Holmstrom (fredrik.johan.holmstrom@gmail.com)
+* Copyright (c) 2012-2014 Fredrik Holmstrom (fredrik.johan.holmstrom@gmail.com)
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 * THE SOFTWARE.
 */
 
-using System;
 namespace UdpKit {
     enum UdpConnectionState : int {
         None = 0,
