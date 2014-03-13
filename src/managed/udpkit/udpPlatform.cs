@@ -23,14 +23,14 @@
 */
 
 namespace UdpKit {
-    public enum UdpSocketInterfaceError {
+    public enum UdpSocketPlatformError {
         None = 0,
         Unknown = 1,
         WouldBlock = 2
     }
 
     public abstract class UdpPlatform {
-        public abstract UdpSocketInterfaceError Error { get; }
+        public abstract UdpSocketPlatformError Error { get; }
         public abstract UdpEndPoint EndPoint { get; }
         public abstract long PlatformError { get; }
         public abstract string PlatformErrorString { get; }

@@ -48,8 +48,8 @@ namespace UdpKit {
             }
         }
 
-        public override UdpSocketInterfaceError Error {
-            get { return UdpSocketInterfaceError.Unknown; }
+        public override UdpSocketPlatformError Error {
+            get { return UdpSocketPlatformError.Unknown; }
         }
         
         public override long PlatformError {

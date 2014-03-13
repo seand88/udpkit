@@ -45,14 +45,14 @@ namespace UdpKit {
             convertAddress = new IPAddress(0L);
         }
 
-        public override UdpSocketInterfaceError Error {
+        public override UdpSocketPlatformError Error {
             get {
                 switch (socketError) {
                     case SocketError.WouldBlock:
-                        return UdpSocketInterfaceError.WouldBlock;
+                        return UdpSocketPlatformError.WouldBlock;
 
                     default:
-                        return UdpSocketInterfaceError.Unknown;
+                        return UdpSocketPlatformError.Unknown;
                 }
             }
         }
