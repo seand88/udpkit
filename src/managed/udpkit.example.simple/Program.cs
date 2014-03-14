@@ -46,9 +46,9 @@ namespace UdpKit.Examples.Simple {
             client.Connect(new UdpEndPoint(UdpIPv4Address.Localhost, 14000));
 
             while (true) {
-                UdpEvent ev = default(UdpEvent);
+                UdpEvent ev;
 
-                while (client.Poll(ref ev)) {
+                while (client.Poll(out ev)) {
                     UdpLog.User("Event raised {0}", ev.EventType);
 
                     switch (ev.EventType) {
@@ -80,9 +80,9 @@ namespace UdpKit.Examples.Simple {
             server.Start(new UdpEndPoint(UdpIPv4Address.Localhost, 14000));
 
             while (true) {
-                UdpEvent ev = default(UdpEvent);
+                UdpEvent ev;
 
-                while (server.Poll(ref ev)) {
+                while (server.Poll(out ev)) {
                     UdpLog.User("Event raised {0}", ev.EventType);
 
                     switch (ev.EventType) {

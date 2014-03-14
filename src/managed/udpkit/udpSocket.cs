@@ -120,7 +120,7 @@ namespace UdpKit {
         /// A thread can wait on this event before calling Poll to make sure at least one event is available
         /// </summary>
         public AutoResetEvent EventsAvailable {
-            get { return availableEvent;  }
+            get { return availableEvent; }
         }
 
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {

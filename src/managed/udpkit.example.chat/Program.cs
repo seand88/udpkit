@@ -65,10 +65,10 @@ namespace UdpKit.Examples.Chat {
 
         public void Loop () {
             int connections = 0;
-            UdpEvent ev = default(UdpEvent);
+            UdpEvent ev;
 
             while (true) {
-                while (socket.Poll(ref ev)) {
+                while (socket.Poll(out ev)) {
                     switch (ev.EventType) {
                         case UdpEventType.Connected:
                             ++connections;
@@ -138,15 +138,16 @@ namespace UdpKit.Examples.Chat {
         }
 
         public void Loop () {
-            UdpEvent ev = default(UdpEvent);
             StreamReader input = new StreamReader(Console.OpenStandardInput());
             Char[] buffer = new Char[1024];
             ReadLine read = Console.ReadLine;
             IAsyncResult result = null;
             UdpConnection connection = null;
+            
+            UdpEvent ev;
 
             while (true) {
-                while (socket.Poll(ref ev)) {
+                while (socket.Poll(out ev)) {
                     switch (ev.EventType) {
                         case UdpEventType.Connected:
                             UdpLog.User("Connected to server at {0}", ev.Connection.RemoteEndPoint);
