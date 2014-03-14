@@ -211,7 +211,7 @@ namespace UdpKit {
         /// </summary>
         /// <param name="ev">The current event on this socket</param>
         /// <returns>True if a new event is available, False otherwise</returns>
-        public bool Poll (ref UdpEvent ev) {
+        public bool Poll (out UdpEvent ev) {
             lock (eventQueueOut) {
                 if (eventQueueOut.Count > 0) {
                     ev = eventQueueOut.Dequeue();
@@ -219,6 +219,7 @@ namespace UdpKit {
                 }
             }
 
+            ev = default(UdpEvent);
             return false;
         }
 
