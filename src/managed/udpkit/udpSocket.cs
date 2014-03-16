@@ -413,15 +413,26 @@ namespace UdpKit {
         }
 
         void NetworkLoop () {
+            bool created = false;
+            bool started = false;
+
             while (state == UdpSocketState.Created || state == UdpSocketState.Running) {
                 try {
-                    UdpLog.Info("socket created");
+                    if (created == false) {
+                        UdpLog.Info("socket created");
+                        created = true;
+                    }
+
                     while (state == UdpSocketState.Created) {
                         ProcessIncommingEvents(true);
                         Thread.Sleep(1);
                     }
 
-                    UdpLog.Info("socket started");
+                    if (started == false) {
+                        UdpLog.Info("socket started");
+                        started = true;
+                    }
+
                     while (state == UdpSocketState.Running) {
                         RecvDelayedPackets();
                         RecvNetworkData();
