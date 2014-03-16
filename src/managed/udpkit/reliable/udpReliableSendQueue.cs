@@ -69,7 +69,7 @@ namespace UdpKit {
         }
 
         public UdpReliableSendQueue (int sequenceBits) {
-            if (sequenceBits < 4 && sequenceBits > 32) {
+            if (sequenceBits < 4 || sequenceBits > 32) {
                 throw new System.ArgumentException("sequenceBits must be >= 4 and <= 32");
             }
 

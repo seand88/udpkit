@@ -39,7 +39,7 @@ namespace UdpKit {
         readonly Node[] nodes;
 
         public UdpReliableRecvQueue (int sequenceBits) {
-            if (sequenceBits < 4 && sequenceBits > 32) {
+            if (sequenceBits < 4 || sequenceBits > 32) {
                 throw new ArgumentException("sequenceBits must be >= 4 and <= 32");
             }
 
