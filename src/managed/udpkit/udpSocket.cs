@@ -503,12 +503,19 @@ namespace UdpKit {
                 UdpConnection cn;
 
                 if (connLookup.TryGetValue(ev.EndPoint, out cn)) {
+                    // if we are connecting, destroy connection
                     if (cn.CheckState(UdpConnectionState.Connecting)) {
                         // notify user thread
                         Raise(UdpEvent.PUBLIC_CONNECT_FAILED, ev.EndPoint);
 
                         // destroy this connection
                         cn.ChangeState(UdpConnectionState.Destroy);
+                    }
+
+                    // if we are connected, disconnect 
+                    else if (ev.Connection.CheckState(UdpConnectionState.Connected)) {
+                        ev.Connection.SendCommand(UdpCommandType.Disconnected);
+                        ev.Connection.ChangeState(UdpConnectionState.Disconnected);
                     }
                 }
             }
