@@ -223,6 +223,23 @@ namespace UdpKit {
             return false;
         }
 
+        /// <summary>
+        /// Peek the next event from the socket
+        /// </summary>
+        /// <param name="ev">The next event on this socket</param>
+        /// <returns>True if an event is available, False otherwise</returns>
+        public bool Peek (out UdpEvent ev) {
+            lock (eventQueueOut) {
+                if (eventQueueOut.Count > 0) {
+                    ev = eventQueueOut.Peek();
+                    return true;
+                }
+            }
+
+            ev = default(UdpEvent);
+            return false;
+        }
+
         internal void Raise (int eventType) {
             UdpEvent ev = new UdpEvent();
             ev.Type = eventType;
