@@ -43,7 +43,14 @@ namespace UdpKit {
         }
 
         bool ShouldDropPacket {
-            get { return random.NextDouble() < Config.SimulatedLoss; }
+            get {
+                if (random.NextDouble() < Config.SimulatedLoss) {
+                    UdpLog.Debug("Dropping packet (Simulated)");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
 
         partial void DelayPacket (UdpEndPoint ep, byte[] data, int length) {
