@@ -65,7 +65,7 @@ namespace UdpKit {
             return false;
         }
 
-        public bool Poll (out UdpEvent ev, ref UdpSocket socket) {
+        public bool Poll (out UdpEvent ev, out UdpSocket socket) {
             bool allowRestart = (index != 0);
 
         RESTART:
