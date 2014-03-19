@@ -708,5 +708,33 @@ namespace UdpKit {
         public static UdpSocketMultiplexer CreateMultiplexer (params UdpSocket[] sockets) {
             return new UdpSocketMultiplexer(sockets);
         }
+
+        public static UdpSocketMultiplexer CreateMultiplexer<TPlatform, TSerializer> (UdpIPv4Address address, ushort portMin, ushort portMax)
+            where TPlatform : UdpPlatform, new()
+            where TSerializer : UdpSerializer, new() {
+            return CreateMultiplexer<TPlatform, TSerializer>(address, portMin, portMax, new UdpConfig());
+        }
+
+        public static UdpSocketMultiplexer CreateMultiplexer<TPlatform, TSerializer> (UdpIPv4Address address, ushort portMin, ushort portMax, UdpConfig config)
+            where TPlatform : UdpPlatform, new()
+            where TSerializer : UdpSerializer, new() {
+
+            if (portMin > portMax) {
+                throw new ArgumentOutOfRangeException("portMin was larger then portMax");
+            }
+
+            List<UdpSocket> sockets = new List<UdpSocket>();
+
+            for (; portMin <= portMax; portMin += 1) {
+                // create and start socket
+                UdpSocket s = Create<TPlatform, TSerializer>(config);
+                s.Start(new UdpEndPoint(address, portMin));
+
+                // add to list
+                sockets.Add(s);
+            }
+
+            return CreateMultiplexer(sockets.ToArray());
+        }
     }
 }
