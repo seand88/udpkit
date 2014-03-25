@@ -133,6 +133,10 @@ namespace UdpKit {
             random = new Random();
             stats = new UdpStats();
             availableEvent = new AutoResetEvent(false);
+          
+            if (this.Config.NoiseFunction == null) {
+                this.Config.NoiseFunction =  delegate() { return (float) random.NextDouble(); };
+            }
 
             readStream = new UdpStream(new byte[config.MtuMax * 2]);
             writeStream = new UdpStream(new byte[config.MtuMax * 2]);

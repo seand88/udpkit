@@ -44,7 +44,7 @@ namespace UdpKit {
 
         bool ShouldDropPacket {
             get {
-                if (random.NextDouble() < Config.SimulatedLoss) {
+                if (Config.NoiseFunction() < Config.SimulatedLoss) {
                     UdpLog.Debug("Dropping packet (Simulated)");
                     return true;
                 } else {
@@ -54,11 +54,15 @@ namespace UdpKit {
         }
 
         partial void DelayPacket (UdpEndPoint ep, byte[] data, int length) {
+            uint pingMin = (uint) Config.SimulatedPingMin;
+            uint pingMax = (uint) Config.SimulatedPingMax;
+            uint delay =  pingMin + (uint) ((pingMax - pingMin) * Config.NoiseFunction());
+
             DelayedPacket packet = new DelayedPacket();
             packet.Data = delayedBuffers.Count > 0 ? delayedBuffers.Dequeue() : new byte[Config.MtuMax * 2];
             packet.EndPoint = ep;
             packet.Length = length;
-            packet.Time = GetCurrentTime() + (uint) random.Next(Config.SimulatedPingMin, Config.SimulatedPingMax);
+            packet.Time = GetCurrentTime() + delay;
 
             // copy entire buffer into packets data buffer
             Array.Copy(data, 0, packet.Data, 0, data.Length);

@@ -23,6 +23,8 @@
 */
 
 namespace UdpKit {
+    public delegate float UdpNoise ();
+
     public class UdpConfig {
         /// <summary>
         /// The default MTU for new connections, default: 512 (bytes)
@@ -143,6 +145,11 @@ namespace UdpKit {
         /// How large the event queues should by default, default: 4096
         /// </summary>
         public int InitialEventQueueSize = 4096;
+
+        /// <summary>
+        /// Custom noise function for use in packet loss simulation, default: null
+        /// </summary>
+        public UdpNoise NoiseFunction = null;
 
         internal UdpConfig Duplicate () {
             return (UdpConfig) MemberwiseClone();
