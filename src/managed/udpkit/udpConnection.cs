@@ -230,7 +230,7 @@ namespace UdpKit {
 
         internal void ProcessConnectedTimeouts (uint now) {
             if ((recvTime + socket.Config.ConnectionTimeout) < now) {
-                UdpLog.Debug("disconnecting due to timeout from {0}, last packet received: {1}, current time: {2}", endpoint.ToString(), recvTime.ToString(), now.ToString());
+                UdpLog.Debug("disconnecting due to timeout from {0}", endpoint);
                 ChangeState(UdpConnectionState.Disconnected);
             }
 
