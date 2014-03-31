@@ -44,7 +44,8 @@ namespace UdpKit {
 
         bool ShouldDropPacket {
             get {
-                if (Config.NoiseFunction() < Config.SimulatedLoss) {
+                float n = Config.NoiseFunction();
+                if (n > 0f && Config.NoiseFunction() < Config.SimulatedLoss) {
                     UdpLog.Debug("Dropping packet (Simulated)");
                     return true;
                 } else {
