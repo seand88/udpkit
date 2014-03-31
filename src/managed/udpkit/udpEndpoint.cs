@@ -44,12 +44,6 @@ namespace UdpKit {
         public readonly UdpIPv4Address Address;
         public readonly ushort Port;
 
-        public UdpEndPoint (string endpoint) {
-            string[] parts = endpoint.Split(':');
-            this.Address = new UdpIPv4Address(parts[0]);
-            this.Port = ushort.Parse(parts[1]);
-        }
-
         public UdpEndPoint (UdpIPv4Address address, ushort port) {
             this.Address = address;
             this.Port = port;

@@ -63,15 +63,6 @@ namespace UdpKit {
             Packed = (uint) IPAddress.NetworkToHostOrder((int) addr);
         }
 
-        public UdpIPv4Address (string ip) {
-            string[] parts = ip.Split('.');
-            Packed = 0;
-            Byte0 = byte.Parse(parts[3]);
-            Byte1 = byte.Parse(parts[2]);
-            Byte2 = byte.Parse(parts[1]);
-            Byte3 = byte.Parse(parts[0]);
-        }
-
         public UdpIPv4Address (byte a, byte b, byte c, byte d) {
             Packed = 0;
             Byte0 = d;
