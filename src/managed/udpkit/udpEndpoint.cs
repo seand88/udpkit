@@ -79,6 +79,17 @@ namespace UdpKit {
             return string.Format("{0}.{1}.{2}.{3}:{4}", Address.Byte3, Address.Byte2, Address.Byte1, Address.Byte0, Port);
         }
 
+        public static UdpEndPoint Parse (string endpoint) {
+            string[] parts = endpoint.Split(':');
+
+            if (parts.Length != 2) { 
+                throw new FormatException("endpoint is not in the correct format");
+            }
+            
+            UdpIPv4Address address = UdpIPv4Address.Parse(parts[0]);
+            return new UdpEndPoint(address, ushort.Parse(parts[1]));
+        }
+
         public static bool operator == (UdpEndPoint x, UdpEndPoint y) {
             return Compare(x, y) == 0;
         }

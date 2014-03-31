@@ -117,5 +117,15 @@ namespace UdpKit {
             if (x.Packed < y.Packed) return -1;
             return 0;
         }
+
+        internal static UdpIPv4Address Parse (string address) {
+            string[] parts = address.Split('.');
+
+            if (parts.Length != 4) { 
+                throw new FormatException("address is not in the correct format");
+            }
+
+            return new UdpIPv4Address(byte.Parse(parts[0]), byte.Parse(parts[1]), byte.Parse(parts[2]), byte.Parse(parts[3]));
+        }
     }
 }
