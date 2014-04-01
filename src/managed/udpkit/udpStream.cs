@@ -528,7 +528,7 @@ namespace UdpKit {
         }
 
         public void WriteString (string value) {
-            WriteString(value, Encoding.UTF8);
+            WriteString(value ?? "", Encoding.UTF8);
         }
 
         public string ReadString (Encoding encoding) {
