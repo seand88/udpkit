@@ -300,7 +300,7 @@ namespace UdpKit {
         internal bool Send (UdpEndPoint endpoint, byte[] buffer, int length) {
             if (state == UdpSocketState.Running || state == UdpSocketState.Created) {
                 int bytesSent = 0;
-                UdpLog.Debug("sending packet to {0}", endpoint);
+                //UdpLog.Debug("sending packet to {0}", endpoint);
                 return platform.SendTo(buffer, length, endpoint, ref bytesSent);
             }
 
@@ -633,7 +633,7 @@ namespace UdpKit {
                 UdpStream stream = GetReadStream();
 
                 if (platform.RecvFrom(stream.Data, stream.Data.Length, ref bytes, ref ep)) {
-                  UdpLog.Debug("received packet from {0}", ep.ToString());
+                  //UdpLog.Debug("received packet from {0}", ep.ToString());
 
 #if DEBUG
                     if (ShouldDropPacket) {
