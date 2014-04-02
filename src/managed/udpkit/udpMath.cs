@@ -23,16 +23,12 @@
 */
 
 namespace UdpKit {
-    internal static class UdpMath {
-        internal static bool IsPowerOfTwo (uint x) {
+    public static class UdpMath {
+        public static bool IsPowerOfTwo (uint x) {
             return (x != 0) && ((x & (x - 1)) == 0);
         }
 
-        internal static bool IsSet (uint mask, uint flag) {
-            return (mask & flag) == flag;
-        }
-
-        internal static uint NextPow2 (uint v) {
+        public static uint NextPow2 (uint v) {
             v--;
             v |= v >> 1;
             v |= v >> 2;
@@ -43,7 +39,7 @@ namespace UdpKit {
             return v;
         }
 
-        internal static int HighBit (uint v) {
+        public static int HighBit (uint v) {
             if (v == 0)
                 return 0;
 
@@ -56,26 +52,30 @@ namespace UdpKit {
             return r;
         }
 
-        internal static int BytesRequired (int bits) {
+        public static int BytesRequired (int bits) {
             return (bits + 7) >> 3;
         }
 
-        internal static int SeqDistance (ushort from, ushort to, int shift) {
+        public static int SeqDistance (ushort from, ushort to, int shift) {
             from <<= shift;
             to <<= shift;
             return ((short) (from - to)) >> shift;
         }
 
-        internal static ushort SeqNext (ushort seq, ushort mask) {
+        public static ushort SeqNext (ushort seq, ushort mask) {
             seq += 1;
             seq &= mask;
             return seq;
         }
 
-        internal static ushort SeqPrev (ushort seq, ushort mask) {
+        public static ushort SeqPrev (ushort seq, ushort mask) {
             seq -= 1;
             seq &= mask;
             return seq;
+        }
+
+        internal static bool IsSet (uint mask, uint flag) {
+            return (mask & flag) == flag;
         }
 
         internal static ushort Clamp (ushort value, ushort min, ushort max) {
