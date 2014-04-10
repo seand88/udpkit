@@ -521,18 +521,27 @@ namespace UdpKit {
         }
 
         public void WriteString (string value, Encoding encoding) {
-            int byteCount = encoding.GetByteCount(value);
+            if (string.IsNullOrEmpty(value)) {
+                WriteInt(0);
+            } else { 
+                int byteCount = encoding.GetByteCount(value);
 
-            WriteInt(byteCount);
-            WriteByteArray(encoding.GetBytes(value));
+                WriteInt(byteCount);
+                WriteByteArray(encoding.GetBytes(value));
+            }
         }
 
         public void WriteString (string value) {
-            WriteString(value ?? "", Encoding.UTF8);
+            WriteString(value, Encoding.UTF8);
         }
 
         public string ReadString (Encoding encoding) {
             int byteCount = ReadInt();
+
+            if (byteCount == 0) {
+              return "";
+            }
+
             var bytes = new byte[byteCount];
 
             ReadByteArray(bytes);
