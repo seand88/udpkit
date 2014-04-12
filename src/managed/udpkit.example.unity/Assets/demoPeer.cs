@@ -18,10 +18,10 @@ public class demoPeer : MonoBehaviour {
         socket = UdpKitUnityUtils.CreatePlatformSpecificSocket<demoSerializer>();
 
         if (isServer) {
-            socket.Start(new UdpEndPoint(serverAddress));
+            socket.Start(UdpEndPoint.Parse(serverAddress));
         } else {
             socket.Start(UdpEndPoint.Any);
-            socket.Connect(new UdpEndPoint(serverAddress));
+			socket.Connect(UdpEndPoint.Parse(serverAddress));
         }
     }
 
@@ -30,9 +30,9 @@ public class demoPeer : MonoBehaviour {
     }
 
     void Update () {
-        UdpEvent ev = default(UdpEvent);
+        UdpEvent ev;
 
-        while (socket.Poll(ref ev)) {
+        while (socket.Poll(out ev)) {
             switch (ev.EventType) {
                 case UdpEventType.Connected:
                     UdpLog.User("Client connect from {0}", ev.Connection.RemoteEndPoint);
