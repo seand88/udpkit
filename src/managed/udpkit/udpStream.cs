@@ -519,14 +519,20 @@ namespace UdpKit {
 
             Ptr += (count * 8);
         }
-
+      
         public void WriteString (string value, Encoding encoding) {
-            if (string.IsNullOrEmpty(value)) {
-                WriteInt(0);
-            } else { 
-                int byteCount = encoding.GetByteCount(value);
+            WriteString(value, encoding, int.MaxValue);
+        }
 
-                WriteInt(byteCount);
+        public void WriteString (string value, Encoding encoding, int length) {
+            if (string.IsNullOrEmpty(value)) {
+                WriteUShort(0);
+            } else {
+                if (length < value.Length) {
+                    value = value.Substring(0, length);
+                }
+
+                WriteInt(encoding.GetByteCount(value));
                 WriteByteArray(encoding.GetBytes(value));
             }
         }
@@ -536,7 +542,7 @@ namespace UdpKit {
         }
 
         public string ReadString (Encoding encoding) {
-            int byteCount = ReadInt();
+            int byteCount = ReadUShort();
 
             if (byteCount == 0) {
               return "";
