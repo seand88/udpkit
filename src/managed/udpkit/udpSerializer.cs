@@ -64,9 +64,6 @@ namespace UdpKit {
 
         public abstract bool Pack (UdpStream stream, ref object o);
         public abstract bool Unpack (UdpStream stream, ref object o);
-
-        public virtual void Created () { }
-        public virtual void Destroyed () { }
     }
 
     public abstract class UdpSerializer<T> : UdpSerializer {

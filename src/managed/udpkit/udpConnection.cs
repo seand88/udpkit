@@ -171,7 +171,6 @@ namespace UdpKit {
 
             serializer = socket.CreateSerializer();
             serializer.Connection = this;
-            serializer.Created();
         }
 
         /// <summary>
@@ -375,7 +374,6 @@ namespace UdpKit {
         }
 
         internal void Destroy () {
-            serializer.Destroyed();
         }
 
         bool SendStream (UdpStream stream, UdpHandle handle, bool expandToMtu) {
