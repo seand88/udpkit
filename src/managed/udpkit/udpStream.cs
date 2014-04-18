@@ -532,7 +532,7 @@ namespace UdpKit {
                     value = value.Substring(0, length);
                 }
 
-                WriteInt(encoding.GetByteCount(value));
+                WriteUShort((ushort) encoding.GetByteCount(value));
                 WriteByteArray(encoding.GetBytes(value));
             }
         }
