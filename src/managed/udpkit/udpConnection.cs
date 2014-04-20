@@ -444,7 +444,7 @@ namespace UdpKit {
 
             // we have to be within window size
             if (seqDistance > socket.Config.PacketWindow || seqDistance < -socket.Config.PacketWindow) {
-                ConnectionError(UdpConnectionError.SequenceOutOfBounds);
+                ConnectionError(UdpConnectionError.SequenceOutOfBounds, string.Format("seqDistance: {0}, socket.Config.PacketWindow: {1}", seqDistance, socket.Config.PacketWindow));
                 return false;
             }
 
@@ -563,7 +563,11 @@ namespace UdpKit {
         }
 
         void ConnectionError (UdpConnectionError error) {
-            UdpLog.Debug("error '{0}' on connection to {1}", error.ToString(), endpoint.ToString());
+          ConnectionError(error, "");
+        }
+
+        void ConnectionError (UdpConnectionError error, string message) {
+            UdpLog.Debug("error '{0} - {2}' on connection to {1}", error.ToString(), endpoint.ToString(), message);
 
             switch (error) {
                 case UdpConnectionError.SequenceOutOfBounds:
@@ -613,23 +617,23 @@ namespace UdpKit {
 
                         // handle lost
                         ObjectLost(handle.Object);
-                    }
+                    } else { 
+                        if ((header.AckHistory & (1UL << -seqDistance)) != 0UL) {
+                            // track stats
+                            stats.PacketDelivered();
+                            socket.Statistics.PacketDelivered();
 
-                    if ((header.AckHistory & (1UL << -seqDistance)) != 0UL) {
-                        // track stats
-                        stats.PacketDelivered();
-                        socket.Statistics.PacketDelivered();
+                            // handle delivered objects
+                            ObjectDelivered(handle.Object);
 
-                        // handle delivered objects
-                        ObjectDelivered(handle.Object);
+                        } else {
+                            // track stats
+                            stats.PacketLost();
+                            socket.Statistics.PacketLost();
 
-                    } else {
-                        // track stats
-                        stats.PacketLost();
-                        socket.Statistics.PacketLost();
-
-                        // handle
-                        ObjectLost(handle.Object);
+                            // handle
+                            ObjectLost(handle.Object);
+                        }
                     }
                 }
 
