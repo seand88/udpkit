@@ -64,6 +64,7 @@
     <Compile Include="udpSet.cs" />
     <Compile Include="udpSocket.cs" />
     <Compile Include="udpSocketMultiplexer.cs" />
+    <Compile Include="udpStreamPool.cs" />
     <Compile Include="udpUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

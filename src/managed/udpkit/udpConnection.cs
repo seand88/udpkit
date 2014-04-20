@@ -444,7 +444,7 @@ namespace UdpKit {
 
             // we have to be within window size
             if (seqDistance > socket.Config.PacketWindow || seqDistance < -socket.Config.PacketWindow) {
-                ConnectionError(UdpConnectionError.SequenceOutOfBounds, string.Format("seqDistance: {0}, socket.Config.PacketWindow: {1}", seqDistance, socket.Config.PacketWindow));
+                ConnectionError(UdpConnectionError.SequenceOutOfBounds, string.Format("seqDistance: {0}, socket.Config.PacketWindow: {1}, header.ObjSequence: {2}, recvSequence: {3}", seqDistance, socket.Config.PacketWindow, header.ObjSequence, recvSequence));
                 return false;
             }
 
@@ -487,7 +487,7 @@ namespace UdpKit {
 
         void OnStateConnected (UdpConnectionState oldState) {
             if (oldState == UdpConnectionState.Connecting) {
-                UdpLog.Info("connected to {0}", endpoint.ToString());
+                UdpLog.Info("connected to {0} ({1})", endpoint.ToString(), mode);
 
                 if (IsServer) {
                     SendCommand(UdpCommandType.Accepted);

@@ -244,6 +244,14 @@ namespace UdpKit {
             return false;
         }
 
+        /// <summary>
+        /// Creates a pool of UdpStream objects
+        /// </summary>
+        /// <returns></returns>
+        public UdpStreamPool CreateStreamPool () {
+          return new UdpStreamPool(this);
+        }
+
         internal void Raise (int eventType) {
             UdpEvent ev = new UdpEvent();
             ev.Type = eventType;

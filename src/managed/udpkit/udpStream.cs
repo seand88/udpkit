@@ -27,6 +27,7 @@ using System.Text;
 
 namespace UdpKit {
     public class UdpStream {
+        internal bool pooled = true;
         internal int Ptr;
         internal int Length;
         internal byte[] Data;
