@@ -95,7 +95,7 @@ namespace UdpKit {
         internal int OptionIntValue;
 
         [FieldOffset(8)]
-        internal int OptionFloatValue;
+        internal float OptionFloatValue;
 
         [FieldOffset(16)]
         UdpEventReferenceObjects Refs;
