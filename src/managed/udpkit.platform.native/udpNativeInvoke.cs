@@ -34,7 +34,7 @@ namespace UdpKit {
 #if UDPKIT_IOS
 		"__Internal";
 #elif UDPKIT_ANDROID
-        "updkit_android";
+        "libudpkit_android";
 #elif UDPKIT_WIN32
         "libudpkit_win32";
 #endif
