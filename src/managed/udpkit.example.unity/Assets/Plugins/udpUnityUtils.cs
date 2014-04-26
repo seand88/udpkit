@@ -1,4 +1,5 @@
-﻿using UdpKit;
+﻿using System;
+using UdpKit;
 
 public static class UdpKitUnityUtils {
   public static UdpSocket CreatePlatformSpecificSocket<TSerializer> () where TSerializer : UdpSerializer, new() {
@@ -13,7 +14,7 @@ public static class UdpKitUnityUtils {
 #elif UNITY_WEBPLAYER || UNITY_STANDALONE || UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
     return UdpSocket.Create<UdpPlatformManaged, TSerializer>(config);
 #else
-    throw new System.NotImplementedException("UdpKit doesn't support the current platform");
+    throw new NotSupportedException(string.Format("UdpKit doesn't support the platform '{0}'", Application.platform));
 #endif
   }
 }
