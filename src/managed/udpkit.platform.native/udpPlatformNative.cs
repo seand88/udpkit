@@ -27,9 +27,9 @@ using System;
 namespace UdpKit {
 	public sealed unsafe class 
 #if UDPKIT_IOS
-	UdpPlatformIOS
+	  UdpPlatformIOS
 #elif UDPKIT_ANDROID
-	UdpPlatformAndroid
+	  UdpPlatformAndroid
 #elif UDPKIT_WIN32
     UdpPlatformWin32
 #endif
@@ -72,9 +72,9 @@ namespace UdpKit {
 
         public 
 #if UDPKIT_IOS
-	UdpPlatformIOS
+	  UdpPlatformIOS
 #elif UDPKIT_ANDROID
-	UdpPlatformAndroid
+	  UdpPlatformAndroid
 #elif UDPKIT_WIN32
     UdpPlatformWin32
 #endif
