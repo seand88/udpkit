@@ -72,6 +72,7 @@ namespace UdpKit {
         readonly UdpStream readStream;
         readonly UdpStream writeStream;
         readonly UdpConfig configCopy;
+        readonly UdpStreamPool streamPool;
         readonly AutoResetEvent availableEvent;
         readonly Queue<UdpEvent> eventQueueIn;
         readonly Queue<UdpEvent> eventQueueOut;
@@ -116,6 +117,10 @@ namespace UdpKit {
             get { return GetCurrentTime(); }
         }
 
+        public UdpStreamPool StreamPool {
+            get { return streamPool; }
+        }
+
         /// <summary>
         /// A thread can wait on this event before calling Poll to make sure at least one event is available
         /// </summary>
@@ -140,6 +145,7 @@ namespace UdpKit {
 
             readStream = new UdpStream(new byte[config.MtuMax * 2]);
             writeStream = new UdpStream(new byte[config.MtuMax * 2]);
+            streamPool = new UdpStreamPool(this);
 
             eventQueueIn = new Queue<UdpEvent>(config.InitialEventQueueSize);
             eventQueueOut = new Queue<UdpEvent>(config.InitialEventQueueSize);
@@ -242,14 +248,6 @@ namespace UdpKit {
 
             ev = default(UdpEvent);
             return false;
-        }
-
-        /// <summary>
-        /// Creates a pool of UdpStream objects
-        /// </summary>
-        /// <returns></returns>
-        public UdpStreamPool CreateStreamPool () {
-          return new UdpStreamPool(this);
         }
 
         internal void Raise (int eventType) {

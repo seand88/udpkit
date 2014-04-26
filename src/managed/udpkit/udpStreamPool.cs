@@ -2,23 +2,22 @@
 
 namespace UdpKit {
   public class UdpStreamPool {
-    readonly int size = 0;
+    readonly UdpSocket socket;
     readonly Stack<UdpStream> pool = new Stack<UdpStream>();
 
-    public int Size {
-      get { return size; }
-    }
-
     internal UdpStreamPool (UdpSocket s) {
-      size = s.Config.MtuMax * 2;
+      socket = s;
     }
 
-    public void Release (UdpStream stream) {
-      UdpAssert.Assert(stream.pooled == false);
+    internal void Release (UdpStream stream) {
+      UdpAssert.Assert(stream.IsPooled == false);
 
       lock (pool) {
+        stream.Size = 0;
+        stream.Position = 0;
+        stream.IsPooled = true;
+
         pool.Push(stream);
-        stream.pooled = true;
       }
     }
 
@@ -32,11 +31,16 @@ namespace UdpKit {
       }
 
       if (stream == null) {
-        stream = new UdpStream(new byte[size]);
+        stream = new UdpStream(new byte[socket.Config.MtuMax * 2]);
+        stream.Pool = this;
       }
 
-      UdpAssert.Assert(stream.pooled);
-      stream.pooled = false;
+      UdpAssert.Assert(stream.IsPooled);
+
+      stream.IsPooled = false;
+      stream.Position = 0;
+      stream.Size = (socket.Config.MtuMax - UdpMath.BytesRequired(UdpSocket.HeaderBitSize)) << 3;
+
       return stream;
     }
 

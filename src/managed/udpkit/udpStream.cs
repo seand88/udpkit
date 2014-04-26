@@ -26,8 +26,10 @@ using System;
 using System.Text;
 
 namespace UdpKit {
-    public class UdpStream {
-        internal bool pooled = true;
+    public class UdpStream : IDisposable {
+        internal bool IsPooled = true;
+        internal UdpStreamPool Pool;
+
         internal int Ptr;
         internal int Length;
         internal byte[] Data;
@@ -606,6 +608,12 @@ namespace UdpKit {
 
             Ptr += bits;
             return value;
+        }
+
+        public void Dispose () {
+          if (Pool != null) {
+            Pool.Release(this);
+          }
         }
     }
 }
