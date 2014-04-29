@@ -2,7 +2,7 @@
   public class UdpStreamSerializer : UdpSerializer<UdpStream> {
     public override bool Pack (UdpStream stream, UdpStream input, out UdpStream sent) {
       int writeOffset = 0;
-      int writeLength = UdpMath.BytesRequired(stream.Position);
+      int writeLength = UdpMath.BytesRequired(input.Position);
 
       // we always send the entire thing
       sent = input;
