@@ -718,6 +718,24 @@ namespace UdpKit {
             return Create<TPlatform, TSerializer>(new UdpConfig());
         }
 
+        public static UdpSocket Create (UdpPlatform platform, UdpConfig config) {
+            return Create(platform, () => new UdpStreamSerializer(), config);
+        }
+      
+        public static UdpSocket Create (UdpPlatform platform) {
+            return Create(platform, new UdpConfig());
+        }
+      
+        public static UdpSocket Create<TPlatform> () 
+            where TPlatform : UdpPlatform, new() {
+            return Create(new TPlatform(), new UdpConfig());
+        }
+      
+        public static UdpSocket Create<TPlatform> (UdpConfig config) 
+            where TPlatform : UdpPlatform, new() {
+            return Create(new TPlatform(), config);
+        }
+
         public static UdpSocketMultiplexer CreateMultiplexer (params UdpSocket[] sockets) {
             return new UdpSocketMultiplexer(sockets);
         }
