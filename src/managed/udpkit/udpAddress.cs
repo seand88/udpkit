@@ -109,7 +109,7 @@ namespace UdpKit {
             return 0;
         }
 
-        internal static UdpIPv4Address Parse (string address) {
+        public static UdpIPv4Address Parse (string address) {
             string[] parts = address.Split('.');
 
             if (parts.Length != 4) { 
