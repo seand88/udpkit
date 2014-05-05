@@ -60,7 +60,7 @@ namespace UdpKit {
             uint delay =  pingMin + (uint) ((pingMax - pingMin) * Config.NoiseFunction());
 
             DelayedPacket packet = new DelayedPacket();
-            packet.Data = delayedBuffers.Count > 0 ? delayedBuffers.Dequeue() : new byte[Config.MtuMax * 2];
+            packet.Data = delayedBuffers.Count > 0 ? delayedBuffers.Dequeue() : new byte[Config.PacketSize * 2];
             packet.EndPoint = ep;
             packet.Length = length;
             packet.Time = GetCurrentTime() + delay;
