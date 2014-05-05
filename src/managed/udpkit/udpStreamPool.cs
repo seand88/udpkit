@@ -31,7 +31,7 @@ namespace UdpKit {
       }
 
       if (stream == null) {
-        stream = new UdpStream(new byte[socket.Config.MtuMax * 2]);
+        stream = new UdpStream(new byte[socket.Config.PacketSize * 2]);
         stream.Pool = this;
       }
 
@@ -39,7 +39,7 @@ namespace UdpKit {
 
       stream.IsPooled = false;
       stream.Position = 0;
-      stream.Size = (socket.Config.MtuMax - UdpMath.BytesRequired(UdpSocket.HeaderBitSize)) << 3;
+      stream.Size = (socket.Config.PacketSize - UdpMath.BytesRequired(UdpSocket.HeaderBitSize)) << 3;
 
       return stream;
     }

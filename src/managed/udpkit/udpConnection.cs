@@ -44,7 +44,6 @@ namespace UdpKit {
     }
 
     public enum UdpConnectionOption : int {
-        MtuSize = 0,
         AlwaysSendMtu = 1
     }
 
@@ -162,7 +161,7 @@ namespace UdpKit {
             stats = new UdpStats();
             networkRtt = socket.Config.DefaultNetworkPing;
             aliasedRtt = socket.Config.DefaultAliasedPing;
-            mtu = socket.Config.DefaultMtu;
+            mtu = socket.Config.PacketSize;
             alwaysSendMtu = socket.Config.DefaultAlwaysSendMtu;
             state = UdpConnectionState.Connecting;
             recvTime = socket.GetCurrentTime();
@@ -201,19 +200,6 @@ namespace UdpKit {
             }
         }
 
-        /// <summary>
-        /// Set option with a int value on this connection
-        /// </summary>
-        /// <param name="option">The option to set</param>
-        /// <param name="value">The value</param>
-        public void SetOption (UdpConnectionOption option, int value) {
-            switch (option) {
-                case UdpConnectionOption.MtuSize:
-                    socket.Raise(UdpEvent.INTERNAL_CONNECTION_OPTION, this, option, value);
-                    break;
-            }
-        }
-
         internal void ProcessConnectingTimeouts (uint now) {
             switch (mode) {
                 case UdpConnectionMode.Client:
@@ -244,10 +230,6 @@ namespace UdpKit {
             switch (ev.Option) {
                 case UdpConnectionOption.AlwaysSendMtu:
                     alwaysSendMtu = ev.OptionIntValue == 1;
-                    break;
-
-                case UdpConnectionOption.MtuSize:
-                    mtu = UdpMath.Clamp(ev.OptionIntValue, socket.Config.MtuMin, socket.Config.MtuMax);
                     break;
             }
         }

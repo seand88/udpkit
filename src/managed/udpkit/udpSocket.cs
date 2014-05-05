@@ -143,8 +143,8 @@ namespace UdpKit {
                 this.Config.NoiseFunction =  delegate() { return (float) random.NextDouble(); };
             }
 
-            readStream = new UdpStream(new byte[config.MtuMax * 2]);
-            writeStream = new UdpStream(new byte[config.MtuMax * 2]);
+            readStream = new UdpStream(new byte[config.PacketSize * 2]);
+            writeStream = new UdpStream(new byte[config.PacketSize * 2]);
             streamPool = new UdpStreamPool(this);
 
             eventQueueIn = new Queue<UdpEvent>(config.InitialEventQueueSize);
@@ -362,7 +362,7 @@ namespace UdpKit {
         }
 
         void SendRefusedCommand (UdpEndPoint endpoint) {
-            UdpStream stream = GetWriteStream(Config.DefaultMtu << 3, HeaderBitSize);
+            UdpStream stream = GetWriteStream(Config.PacketSize << 3, HeaderBitSize);
             stream.WriteByte((byte) UdpCommandType.Refused, 8);
 
             UdpHeader header = new UdpHeader();

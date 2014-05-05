@@ -27,9 +27,9 @@ namespace UdpKit {
 
     public class UdpConfig {
         /// <summary>
-        /// The default MTU for new connections, default: 512 (bytes)
+        /// The packet size, default: 1024 (1kb)
         /// </summary>
-        public int DefaultMtu = 512;
+        public int PacketSize = 1024;
 
         /// <summary>
         /// The default network ping for new connections, default: 0.1f (seconds)
@@ -102,16 +102,6 @@ namespace UdpKit {
         /// Max ping we should simulate, default: 0 (ms). Only used in DEBUG builds.
         /// </summary>
         public int SimulatedPingMax = 0;
-
-        /// <summary>
-        /// The smallest allowed MTU, default: 128
-        /// </summary>
-        public int MtuMin = 128;
-
-        /// <summary>
-        /// The largest allowed MTU, default: 2048
-        /// </summary>
-        public int MtuMax = 2048;
 
         /// <summary>
         /// How large our packet window is, this means how many packets we can have "in transit" at once, before
