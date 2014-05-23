@@ -34,6 +34,14 @@ namespace UdpKit {
         internal int Length;
         internal byte[] Data;
 
+        /// <summary>
+        /// A user-assignable object
+        /// </summary>
+        public object UserToken {
+            get;
+            set;
+        }
+
         public int Size {
             get { return Length; }
             set { Length = UdpMath.Clamp(value, 0, Data.Length << 3); }

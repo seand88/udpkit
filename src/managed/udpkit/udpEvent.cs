@@ -127,5 +127,9 @@ namespace UdpKit {
             get { return Refs.Object; }
             internal set { Refs.Object = value; }
         }
+
+        public UdpStream Stream {
+            get { return Object as UdpStream; }
+        }
     }
 }

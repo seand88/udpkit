@@ -127,6 +127,14 @@ namespace UdpKit {
         public AutoResetEvent EventsAvailable {
             get { return availableEvent; }
         }
+      
+        /// <summary>
+        /// A user-assignable object
+        /// </summary>
+        public object UserToken {
+            get;
+            set;
+        }
 
         UdpSocket (UdpPlatform platform, UdpSerializerFactory serializerFactory, UdpConfig config) {
             this.platform = platform;
@@ -499,6 +507,8 @@ namespace UdpKit {
         }
 
         void OnEventStart (UdpEvent ev) {
+            UdpLog.Info("binding socket using platform '{0}'", platform.GetType());
+
             if (ChangeState(UdpSocketState.Created, UdpSocketState.Running)) {
                 if (platform.Bind(ev.EndPoint)) {
                     UdpLog.Info("socket bound to {0}", platform.EndPoint.ToString());
