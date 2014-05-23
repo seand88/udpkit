@@ -35,6 +35,8 @@ namespace UdpKit {
     }
 
     public enum UdpEventType {
+        SocketStarted = UdpEvent.PUBLIC_STARTED,
+        SocketStartupFailed = UdpEvent.PUBLIC_START_FAILED,
         ConnectRequest = UdpEvent.PUBLIC_CONNECT_REQUEST,
         ConnectFailed = UdpEvent.PUBLIC_CONNECT_FAILED,
         ConnectRefused = UdpEvent.PUBLIC_CONNECT_REFUSED,
@@ -78,6 +80,8 @@ namespace UdpKit {
         internal const int PUBLIC_OBJECT_LOST = 18;
         internal const int PUBLIC_OBJECT_RECEIVED = 20;
         internal const int PUBLIC_OBJECT_SENT = 22;
+        internal const int PUBLIC_STARTED = 24;
+        internal const int PUBLIC_START_FAILED = 26;
 
         [FieldOffset(0)]
         internal int Type;
