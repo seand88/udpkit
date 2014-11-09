@@ -63,7 +63,15 @@ namespace UdpKit {
         public bool Send_TryGetForRemoval (out T value) {
             return send.TryRemoveDelivered(out value);
         }
+        
+        public void Send_SetIsDelivered (T value) {
+		  send.SetIsDelivered(value);
+		}
 
+		public void Send_SetSendAgain (T value) {
+		  send.SetSendAgain(value);
+		}
+        
         public bool Recv_TryEnqueue (T value, out UdpReliableRecvResult result) {
             return recv.TryEnqueueForDelivery(value, out result);
         }
