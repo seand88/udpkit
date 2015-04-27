@@ -61,7 +61,7 @@ namespace UdpKit {
                 tail += 1;
                 tail &= mask;
 
-                sequenceNext = value.Sequence + 1u;
+                sequenceNext = value.sequence + 1u;
                 sequenceNext &= sequenceMask;
             } else {
                 value = default(T);
@@ -71,7 +71,7 @@ namespace UdpKit {
         }
 
         public bool TryEnqueueForDelivery (T value, out UdpReliableRecvResult result) {
-            int distance = SequenceDistance(value.Sequence, sequenceNext, sequenceShift);
+            int distance = SequenceDistance(value.sequence, sequenceNext, sequenceShift);
             int index = (tail + distance) & mask;
 
             if (distance <= -nodes.Length || distance >= nodes.Length) {

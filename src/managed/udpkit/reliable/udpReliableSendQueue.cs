@@ -93,7 +93,7 @@ namespace UdpKit {
             }
 
             nodes[index].Value = value;
-            nodes[index].Value.Sequence = generator.Next();
+            nodes[index].Value.sequence = generator.Next();
             nodes[index].State = State.Send;
 
             count += 1;
@@ -144,7 +144,8 @@ namespace UdpKit {
                 return;
             }
 
-            int distance = SequenceDistance(value.Sequence, nodes[tail].Value.Sequence, shift);
+            // ERHUNE j'ai un null pointer ici !!!
+            int distance = SequenceDistance(value.sequence, nodes[tail].Value.sequence, shift);
             if (distance < 0 || distance >= count) {
                 return;
             }
