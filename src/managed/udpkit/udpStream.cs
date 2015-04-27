@@ -30,9 +30,9 @@ namespace UdpKit {
         internal bool IsPooled = true;
         internal UdpStreamPool Pool;
 
-        internal int Ptr;    // in bits
-        internal int Length; // = Data.Length * 8 = number of bits that we can put in the buffer
-        internal byte[] Data;
+        public int Ptr;    // in bits
+        public int Length; // = Data.Length * 8 = number of bits that we can put in the buffer
+        public byte[] Data;
 
         /// <summary>
         /// A user-assignable object

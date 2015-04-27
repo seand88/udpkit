@@ -23,7 +23,7 @@
 */
 
 namespace UdpKit {
-    class UdpReliableSendQueue<T> where T : IUdpSequencedObject {
+    public class UdpReliableSendQueue<T> where T : IUdpSequencedObject {
         enum State {
             Free = 0,
             Send = 1,

@@ -340,7 +340,7 @@ namespace UdpKit {
             }
         }
 
-        internal void SendCommand (UdpCommandType cmd) {
+        public void SendCommand (UdpCommandType cmd) {
             if (CheckCanSend(true) == UdpSendFailReason.None) {
                 UdpStream stream = socket.GetWriteStream(mtu << 3, UdpSocket.HeaderBitSize);
                 stream.WriteByte(0x00); // Erhune: command marker

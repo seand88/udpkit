@@ -23,7 +23,7 @@
 */
 
 namespace UdpKit {
-    struct UdpHeader {
+    public struct UdpHeader {
 
         // Erhune changes: sequence 15->16 bits, simplify padding, remove "object" notion from headers
 
