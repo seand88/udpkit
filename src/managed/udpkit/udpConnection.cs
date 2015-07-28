@@ -560,7 +560,7 @@ namespace UdpKit {
         }
 
         void ConnectionError (UdpConnectionError error, string message) {
-            UdpLog.Debug("error '{0} - {2}' on connection to {1}", error.ToString(), endpoint.ToString(), message);
+            UdpLog.Error("error '{0} - {2}' on connection to {1}", error.ToString(), endpoint.ToString(), message); // Erhune: moved from Debug to Error
 
             switch (error) {
                 case UdpConnectionError.SequenceOutOfBounds:
