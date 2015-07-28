@@ -308,11 +308,13 @@ namespace UdpKit {
                 }
 
                 UdpStream stream = socket.GetWriteStream(mtu << 3, UdpSocket.HeaderBitSize);
+                var initialPtr = stream.Ptr; // Erhune: added info
                 object obj = serializer.NextObject();
 
                 if (serializer.Pack(stream, ref obj)) {
                     if (stream.Overflowing && (socket.Config.AllowPacketOverflow == false)) {
-                        UdpLog.Error("stream to {0} is overflowing, not sending", endpoint.ToString());
+                        UdpLog.Error("Stream to {0} is overflowing (InitialPtr={1} Ptr={2} Len={3}), not sending {4}",
+                            endpoint.ToString(), initialPtr, stream.Ptr, stream.Length, obj); // Erhune: added info
                         socket.Raise(UdpEvent.PUBLIC_OBJECT_SEND_FAILED, this, obj, UdpSendFailReason.StreamOverflow);
                         return;
                     }
