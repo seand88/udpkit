@@ -1,4 +1,4 @@
-﻿/*
+/*
 * The MIT License (MIT)
 * 
 * Copyright (c) 2012-2014 Fredrik Holmstrom (fredrik.johan.holmstrom@gmail.com)
@@ -23,9 +23,11 @@
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UdpKit {
-    public class UdpReliableRecvQueue<T> where T : IUdpSequencedObject {
+    public class UdpReliableRecvQueue<T> : IEnumerable<T> where T : IUdpSequencedObject {
         struct Node {
             public bool Received;
             public T Value;
@@ -100,6 +102,34 @@ namespace UdpKit {
             from <<= shift;
             to <<= shift;
             return ((int) (from - to)) >> shift;
+        }
+
+        // Erhune: added
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        // Erhune: added
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0, n = nodes.Length; i < n; i++)
+            {
+                var node = nodes[i];
+                if (node.Received)
+                {
+                    yield return node.Value;
+                }
+            }
+        }
+
+        // Erhune: added
+        public void Clear()
+        {
+            for (int i = 0, n = nodes.Length; i < n; i++)
+            {
+                nodes[i] = default(Node);
+            }
         }
     }
 }
