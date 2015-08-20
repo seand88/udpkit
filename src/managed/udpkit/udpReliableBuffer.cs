@@ -1,4 +1,4 @@
-/*
+﻿/*
 * The MIT License (MIT)
 * 
 * Copyright (c) 2012-2014 Fredrik Holmstrom (fredrik.johan.holmstrom@gmail.com)
@@ -67,7 +67,7 @@ namespace UdpKit {
         public void Send_SetIsDelivered (T value) {
 		  send.SetIsDelivered(value);
 		}
-
+        
 		public void Send_SetSendAgain (T value) {
 		  send.SetSendAgain(value);
 		}
@@ -83,7 +83,7 @@ namespace UdpKit {
         {
             send.SetSendAgain(value);
         }
-
+        
         public bool Recv_TryEnqueue (T value, out UdpReliableRecvResult result) {
             return recv.TryEnqueueForDelivery(value, out result);
         }
