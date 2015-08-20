@@ -286,8 +286,13 @@ namespace UdpKit {
                     break;
 
                 case 2:
+<<<<<<< HEAD
+                    a = InternalReadByte(8);
+                    b = InternalReadByte(bits - 8);
+=======
                     c = InternalReadByte(bits - 8);
                     d = InternalReadByte(8);
+>>>>>>> master
                     break;
 
                 case 3:
