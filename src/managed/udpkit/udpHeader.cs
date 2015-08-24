@@ -65,10 +65,6 @@ namespace UdpKit {
 
         ushort PadSequence (ushort sequence) {
             sequence <<= SEQ_PADD;
-
-            if (IsObject)
-                sequence |= ((1 << SEQ_PADD) - 1);
-
             return sequence;
         }
 
