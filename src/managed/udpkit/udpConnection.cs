@@ -259,7 +259,8 @@ namespace UdpKit {
             // set recv time of for last packet
             recvTime = socket.GetCurrentTime();
 
-            if ((buffer.Data[0] & 1) == 1) {
+            bool flag_UdpHeader_IsObject = (buffer.Data[0] & 1) == 1;
+            if (flag_UdpHeader_IsObject) {
                 OnObjectReceived(buffer);
             } else {
                 OnCommandReceived(buffer);
