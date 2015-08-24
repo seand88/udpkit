@@ -34,9 +34,9 @@ THE SOFTWARE.
 ### Building native shared library for Android
 
 * Make sure you have the Android NDK installed, which can be found here: https://developer.android.com/tools/sdk/ndk/index.html
-* Open a terminal and go into the src/native/android directory in the udpkit directory.
-* Run the NDK build command like this: ndk_path/ndk-build udpkit/path/src/native/android
-* The .so file can now be found in the "obj" directory inside src/native/android
+* Open a terminal and go into the `src/native/android` directory in the udpkit directory.
+* Run the NDK build command like this: `ndk-build`
+* The .so file can now be found in the "obj" directory inside `src/native/android`
 
 ### Building native static library for iOS
 
