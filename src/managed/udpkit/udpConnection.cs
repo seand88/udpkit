@@ -654,11 +654,11 @@ namespace UdpKit {
             {
                 uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);
                 networkRtt = (networkRtt * 0.9f) + ((float)network * 0.1f);
-                UpdateRemoteTimeOffset (remoteTime, recvTime, (uint)(networkRtt * 500f));
+                UpdateRemoteTimeOffset (remoteTime, recvTime, ((uint)networkRtt) >> 1);
             }
             else
             {
-                UpdateRemoteTimeOffset (remoteTime, recvTime, (uint)(aliasedRtt * 500f));
+                UpdateRemoteTimeOffset (remoteTime, recvTime, ((uint)aliasedRtt) >> 1);
             }
         }
 
