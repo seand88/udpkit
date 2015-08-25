@@ -664,7 +664,7 @@ namespace UdpKit {
 
         void UpdateRemoteTimeOffset (uint remoteTime, uint recvTime, uint halfRoundTripTime)
         {
-            remoteTimeOffset = remoteTime - recvTime + (uint)(halfRoundTripTime * 500f);
+            remoteTimeOffset = remoteTime - recvTime + halfRoundTripTime;
         }
 
         void ObjectLost (object o) {
