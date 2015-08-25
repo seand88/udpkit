@@ -650,12 +650,21 @@ namespace UdpKit {
             uint aliased = recvTime - sendTime;
             aliasedRtt = (aliasedRtt * 0.9f) + ((float) aliased / 1000f * 0.1f);
 
-            remoteTimeOffset = remoteTime - recvTime + (uint)(aliasedRtt * 500f);
-
-            if (UdpSocket.CalculateNetworkPing) {
+            if (UdpSocket.CalculateNetworkPing)
+            {
                 uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);
-                networkRtt = (networkRtt * 0.9f) + ((float) network / 1000f * 0.1f);
+                networkRtt = (networkRtt * 0.9f) + ((float)network / 1000f * 0.1f);
+                UpdateRemoteTimeOffset (remoteTime, recvTime, (uint)(networkRtt * 500f));
             }
+            else
+            {
+                UpdateRemoteTimeOffset (remoteTime, recvTime, (uint)(aliasedRtt * 500f));
+            }
+        }
+
+        void UpdateRemoteTimeOffset (uint remoteTime, uint recvTime, uint halfRoundTripTime)
+        {
+            remoteTimeOffset = remoteTime - recvTime + (uint)(halfRoundTripTime * 500f);
         }
 
         void ObjectLost (object o) {
