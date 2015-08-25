@@ -28,15 +28,20 @@ using System.Collections.Generic;
 namespace UdpKit {
 #if DEBUG
     partial class UdpSocket {
-        struct DelayedPacket {
+        struct DelayedPacket : IComparable<DelayedPacket> {
             public UdpEndPoint EndPoint;
             public byte[] Data;
             public int Length;
             public uint Time;
+
+            public int CompareTo (DelayedPacket other)
+            {
+                return (other.Time == Time) ? 0 : ((Time < other.Time) ? -1 : 1);
+            }
         }
 
         readonly Queue<byte[]> delayedBuffers = new Queue<byte[]>();
-        readonly Queue<DelayedPacket> delayedPackets = new Queue<DelayedPacket>();
+        readonly List<DelayedPacket> delayedPackets = new List<DelayedPacket>();
 
         bool ShouldDelayPacket {
             get { return Config.SimulatedPingMin > 0 && Config.SimulatedPingMax > 0 && Config.SimulatedPingMin <= Config.SimulatedPingMax; }
@@ -68,13 +73,15 @@ namespace UdpKit {
             // copy entire buffer into packets data buffer
             Array.Copy(data, 0, packet.Data, 0, data.Length);
 
-            // put on delay queue
-            delayedPackets.Enqueue(packet);
+            // put in delay list
+            delayedPackets.Add (packet);
+            delayedPackets.Sort ();
         }
 
         partial void RecvDelayedPackets () {
-            while (delayedPackets.Count > 0 && GetCurrentTime() >= delayedPackets.Peek().Time) {
-                DelayedPacket packet = delayedPackets.Dequeue();
+            while (delayedPackets.Count > 0 && GetCurrentTime() >= delayedPackets[0].Time) {
+                DelayedPacket packet = delayedPackets[0];
+                delayedPackets.RemoveAt(0);
                 UdpStream stream = GetReadStream();
 
                 // copy data into streams buffer
