@@ -39,7 +39,7 @@ namespace UdpKit {
         readonly Queue<DelayedPacket> delayedPackets = new Queue<DelayedPacket>();
 
         bool ShouldDelayPacket {
-            get { return Config.SimulatedPingMin > 0 && Config.SimulatedPingMax > 0 && Config.SimulatedPingMin < Config.SimulatedPingMax; }
+            get { return Config.SimulatedPingMin > 0 && Config.SimulatedPingMax > 0 && Config.SimulatedPingMin <= Config.SimulatedPingMax; }
         }
 
         bool ShouldDropPacket {
