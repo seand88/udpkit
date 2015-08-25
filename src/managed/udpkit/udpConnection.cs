@@ -59,15 +59,15 @@ namespace UdpKit {
         /// <summary>
         /// The round-trip time of the network layer, excluding processing delays and ack time
         /// </summary>
-        public float NetworkPing {
-            get { return networkRtt; }
+        public uint NetworkPing {
+            get { return (uint)networkRtt; }
         }
 
         /// <summary>
         /// The total round-trip time, including processing delays and ack
         /// </summary>
-        public float AliasedPing {
-            get { return aliasedRtt; }
+        public uint AliasedPing {
+            get { return (uint)aliasedRtt; }
         }
 
         /// <summary>
@@ -648,12 +648,12 @@ namespace UdpKit {
 
         void UpdatePing (uint remoteTime, uint recvTime, uint sendTime, uint ackTime) {
             uint aliased = recvTime - sendTime;
-            aliasedRtt = (aliasedRtt * 0.9f) + ((float) aliased / 1000f * 0.1f);
+            aliasedRtt = (aliasedRtt * 0.9f) + ((float) aliased * 0.1f);
 
             if (UdpSocket.CalculateNetworkPing)
             {
                 uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);
-                networkRtt = (networkRtt * 0.9f) + ((float)network / 1000f * 0.1f);
+                networkRtt = (networkRtt * 0.9f) + ((float)network * 0.1f);
                 UpdateRemoteTimeOffset (remoteTime, recvTime, (uint)(networkRtt * 500f));
             }
             else
