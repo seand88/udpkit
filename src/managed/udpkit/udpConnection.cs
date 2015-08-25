@@ -132,6 +132,21 @@ namespace UdpKit {
         public UdpStats Statistics {
             get { return stats; }
         }
+        
+        /// <summary>
+        /// The remote clock. Only functional if the remote connection is sending you a clock.
+        /// By default this is only something clients get, since the server has authoritative time.
+        /// </summary>
+        public uint RemoteTime {
+            get { return socket.PrecisionTime + remoteTimeOffset; }
+        }
+        
+        /// <summary>
+        /// Whether this connection should send its clock for the current packet.
+        /// </summary>
+        bool shouldSendClock {
+            get { return mode == UdpConnectionMode.Server; }
+        }
 
         int mtu;
         float networkRtt = 0.1f;
@@ -150,6 +165,7 @@ namespace UdpKit {
         uint recvSinceLastSend;
         uint connectTimeout;
         uint connectAttempts;
+        uint remoteTimeOffset;
 
         internal UdpSocket socket;
         internal UdpConnectionState state;
@@ -314,7 +330,7 @@ namespace UdpKit {
                     }
 
                     UdpHeader header = MakeHeader(true);
-                    header.Pack(stream, socket);
+                    header.Pack(stream, socket, shouldSendClock);
 
                     UdpHandle handle = MakeHandle(ref header);
                     handle.Object = obj;
@@ -342,7 +358,7 @@ namespace UdpKit {
                 stream.WriteByte((byte) cmd, 8);
 
                 UdpHeader header = MakeHeader(false);
-                header.Pack(stream, socket);
+                header.Pack(stream, socket, shouldSendClock);
 
                 UdpHandle handle = MakeHandle(ref header);
                 handle.Object = null;
@@ -623,16 +639,18 @@ namespace UdpKit {
                 }
 
                 if (seqDistance == 0 && header.AckTime > 0) {
-                    UpdatePing(recvTime, handle.SendTime, header.AckTime);
+                    UpdatePing(header.Now, recvTime, handle.SendTime, header.AckTime);
                 }
 
                 sendWindow.Dequeue();
             }
         }
 
-        void UpdatePing (uint recvTime, uint sendTime, uint ackTime) {
+        void UpdatePing (uint remoteTime, uint recvTime, uint sendTime, uint ackTime) {
             uint aliased = recvTime - sendTime;
             aliasedRtt = (aliasedRtt * 0.9f) + ((float) aliased / 1000f * 0.1f);
+
+            remoteTimeOffset = remoteTime - recvTime + (uint)(aliasedRtt * 500f);
 
             if (UdpSocket.CalculateNetworkPing) {
                 uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);

@@ -387,7 +387,7 @@ namespace UdpKit {
       header.AckSequence = 1;
       header.ObjSequence = 1;
       header.Now = 0;
-      header.Pack(stream, this);
+      header.Pack(stream, this, false);
 
       if (Send(endpoint, stream.Data, UdpMath.BytesRequired(stream.Ptr)) == false) {
         // do something here?

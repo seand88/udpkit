@@ -36,12 +36,19 @@ namespace UdpKit {
         public bool IsObject;
         public uint Now;
 
-        public void Pack (UdpStream buffer, UdpSocket socket) {
+        public void Pack (UdpStream buffer, UdpSocket socket, bool sendNow) {
             int pos = buffer.Position;
+
+            sendNow &= buffer.CanWrite (32);
+            if (sendNow)
+            {
+                buffer.WriteUInt (this.Now);
+                pos = buffer.Position;
+            }
 
             buffer.Position = 0;
             buffer.WriteUShort(PadSequence(ObjSequence), SEQ_BITS + SEQ_PADD);
-            buffer.WriteUShort(PadSequence(AckSequence), SEQ_BITS + SEQ_PADD);
+            PackAckSequence (buffer, sendNow);
             buffer.WriteULong(AckHistory, UdpSocket.AckRedundancy);
 
             if (UdpSocket.CalculateNetworkPing) {
@@ -55,7 +62,7 @@ namespace UdpKit {
             buffer.Position = 0;
 
             ObjSequence = TrimSequence(buffer.ReadUShort(SEQ_BITS + SEQ_PADD));
-            AckSequence = TrimSequence(buffer.ReadUShort(SEQ_BITS + SEQ_PADD));
+            UnpackAckSequence (buffer);
             AckHistory = buffer.ReadULong(UdpSocket.AckRedundancy);
 
             if (UdpSocket.CalculateNetworkPing) {
@@ -75,6 +82,27 @@ namespace UdpKit {
         ushort TrimSequence (ushort sequence) {
             sequence >>= SEQ_PADD;
             return sequence;
+        }
+
+        void PackAckSequence (UdpStream buffer, bool sendNow) {
+            ushort sequence = AckSequence;
+            sequence <<= SEQ_PADD;
+            sequence |= (ushort)(sendNow ? ((1U << SEQ_PADD) - 1U) : 0);
+            buffer.WriteUShort(sequence, SEQ_BITS + SEQ_PADD);
+        }
+
+        void UnpackAckSequence (UdpStream buffer) {
+            ushort sequence = buffer.ReadUShort(SEQ_BITS + SEQ_PADD);
+            bool recvNow = 1 == (sequence & 1);
+            if (recvNow)
+            {
+                int pos = buffer.Position;
+                buffer.Position = buffer.Length - 32;
+                Now = buffer.ReadUInt ();
+                buffer.Position = pos;
+            }
+            sequence >>= SEQ_PADD;
+            AckSequence = sequence;
         }
     }
 }
