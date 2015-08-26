@@ -149,8 +149,8 @@ namespace UdpKit {
         }
 
         int mtu;
-        float networkRtt = 0.1f;
-        float aliasedRtt = 0.1f;
+        float networkRtt = 100.0f;
+        float aliasedRtt = 100.0f;
         bool alwaysSendMtu;
         UdpStats stats;
         UdpSerializer serializer;

@@ -32,14 +32,14 @@ namespace UdpKit {
         public int PacketSize = 1024;
 
         /// <summary>
-        /// The default network ping for new connections, default: 0.1f (seconds)
+        /// The default network ping for new connections, default: 100f (milliseconds)
         /// </summary>
-        public float DefaultNetworkPing = 0.1f;
+        public float DefaultNetworkPing = 100f;
 
         /// <summary>
-        /// The default aliased ping for new connections, default: 0.15f (seconds)
+        /// The default aliased ping for new connections, default: 150f (milliseconds)
         /// </summary>
-        public float DefaultAliasedPing = 0.15f;
+        public float DefaultAliasedPing = 150f;
 
         /// <summary>
         /// The default value of "AlwaysSendMtu" setting for new connections, default: false
