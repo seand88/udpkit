@@ -170,6 +170,10 @@ namespace UdpKit {
         internal UdpSocket socket;
         internal UdpConnectionState state;
 
+        int networkPingFilterNextIndexToReplace;
+        uint[] networkPingFilterRttValues;
+        int[] networkPingFilterSortedIndices;
+
         internal UdpConnection (UdpSocket s, UdpConnectionMode m, UdpEndPoint ep) {
             socket = s;
             mode = m;
@@ -183,6 +187,14 @@ namespace UdpKit {
             recvTime = socket.GetCurrentTime();
             sendTime = recvTime;
             sendWindow = new UdpRingBuffer<UdpHandle>(socket.Config.PacketWindow);
+
+            this.networkPingFilterRttValues = new uint[socket.Config.NetworkPingMedianFilterSize];
+            this.networkPingFilterSortedIndices = new int[socket.Config.NetworkPingMedianFilterSize];
+            for (int i = 0; i < this.networkPingFilterSortedIndices.Length; ++i)
+            {
+                this.networkPingFilterSortedIndices[i] = i;
+            }
+            networkPingFilterNextIndexToReplace = 0;
 
             serializer = socket.CreateSerializer();
             serializer.Connection = this;
@@ -652,14 +664,56 @@ namespace UdpKit {
 
             if (UdpSocket.CalculateNetworkPing)
             {
-                uint network = aliased - UdpMath.Clamp(ackTime, 0, aliased);
-                networkRtt = (networkRtt * 0.9f) + ((float)network * 0.1f);
+                uint rtt = aliased - UdpMath.Clamp(ackTime, 0, aliased);
+                networkRtt = 1f * UpdateNetworkRtt (rtt);
                 UpdateRemoteTimeOffset (remoteTime, recvTime, ((uint)networkRtt) >> 1);
             }
             else
             {
                 UpdateRemoteTimeOffset (remoteTime, recvTime, ((uint)aliasedRtt) >> 1);
             }
+        }
+
+        uint UpdateNetworkRtt (uint rtt)
+        {
+            var indexToReplace = networkPingFilterNextIndexToReplace;
+            networkPingFilterNextIndexToReplace++;
+            if (networkPingFilterNextIndexToReplace >= networkPingFilterRttValues.Length)
+            {
+                networkPingFilterNextIndexToReplace = 0;
+            }
+
+            int currentIndex = -1, newIndex = 0;
+            for (int i = 0; i < networkPingFilterSortedIndices.Length; ++i)
+            {
+                if (networkPingFilterSortedIndices[i] == indexToReplace)
+                {
+                    currentIndex = i;
+                }
+                if (networkPingFilterRttValues[networkPingFilterSortedIndices[i]] < rtt)
+                {
+                    newIndex = i;
+                }
+            }
+            if (currentIndex < newIndex)
+            {
+                for (int i = currentIndex; i < newIndex; ++i)
+                {
+                    networkPingFilterSortedIndices[i] = networkPingFilterSortedIndices[i + 1];
+                }
+                networkPingFilterSortedIndices[newIndex] = indexToReplace;
+            }
+            else if (newIndex < currentIndex)
+            {
+                for (int i = currentIndex; i > newIndex; --i)
+                {
+                    networkPingFilterSortedIndices[i] = networkPingFilterSortedIndices[i - 1];
+                }
+                networkPingFilterSortedIndices[newIndex] = indexToReplace;
+            }
+            networkPingFilterRttValues[indexToReplace] = rtt;
+
+            return (networkPingFilterRttValues[networkPingFilterRttValues.Length - 1] == 0) ? rtt : networkPingFilterRttValues[networkPingFilterSortedIndices[networkPingFilterSortedIndices.Length / 2]];
         }
 
         void UpdateRemoteTimeOffset (uint remoteTime, uint recvTime, uint halfRoundTripTime)

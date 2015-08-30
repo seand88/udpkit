@@ -37,6 +37,12 @@ namespace UdpKit {
         public float DefaultNetworkPing = 100f;
 
         /// <summary>
+        /// How many records of ping to keep in the median filtering algorithm for network ping.
+        /// The bigger this is, the more samples it takes for the network ping to approach a new value.
+        /// </summary>
+        public int NetworkPingMedianFilterSize = 8;
+
+        /// <summary>
         /// The default aliased ping for new connections, default: 150f (milliseconds)
         /// </summary>
         public float DefaultAliasedPing = 150f;
