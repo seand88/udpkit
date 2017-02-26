@@ -24,7 +24,7 @@
 
 namespace UdpKit {
     public delegate float UdpNoise ();
-
+    [System.Serializable]
     public class UdpConfig {
         /// <summary>
         /// The packet size, default: 1024 (1kb)
