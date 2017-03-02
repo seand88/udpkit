@@ -29,3 +29,4 @@ src/managed/udpkit.example.unity/Library
 src/managed/udpkit.example.unity/Temp
 src/managed/udpkit.example.unity/*.sln
 src/managed/udpkit.example.unity/*.csproj
+project.lock.json

@@ -30,7 +30,9 @@ namespace UdpKit {
     public sealed class UdpPlatformManaged : UdpPlatform {
         Socket socket;
         EndPoint recvEndPoint;
+#if !DNC
         IPAddress convertAddress;
+#endif
         IPEndPoint convertEndPoint;
         SocketError socketError;
 
@@ -42,7 +44,9 @@ namespace UdpKit {
 
             recvEndPoint = new IPEndPoint(IPAddress.Any, 0);
             convertEndPoint = new IPEndPoint(IPAddress.Any, 0);
+#if !DNC
             convertAddress = new IPAddress(0L);
+#endif
         }
 
         public override UdpSocketPlatformError Error {
@@ -75,7 +79,11 @@ namespace UdpKit {
 
         public override bool Close () {
             try {
+#if DNC
+                socket.Dispose();
+#else
                 socket.Close();
+#endif
                 return true;
             } catch (SocketException exn) {
                 socketError = exn.SocketErrorCode;
@@ -130,12 +138,25 @@ namespace UdpKit {
 
 #pragma warning disable 618
         UdpEndPoint ConvertEndPoint (IPEndPoint endpoint) {
-            return new UdpEndPoint(new UdpIPv4Address(endpoint.Address.Address), (ushort) endpoint.Port);
+            long addr;
+#if DNC
+            addr = BitConverter.ToUInt32(endpoint.Address.GetAddressBytes(), 0);
+#else
+            addr = endpoint.Address.Address;
+#endif
+            return new UdpEndPoint(new UdpIPv4Address(addr), (ushort) endpoint.Port);
         }
 
         IPEndPoint ConvertEndPoint (UdpEndPoint endpoint) {
+#if DNC
+            uint netOrder = (uint)IPAddress.HostToNetworkOrder((int)endpoint.Address.Packed);
+            //convertAddress.Address = netOrder;
+            var convertAddress = new IPAddress(netOrder);
+
+#else
             uint netOrder = (uint) IPAddress.HostToNetworkOrder((int) endpoint.Address.Packed);
             convertAddress.Address = netOrder;
+#endif
             convertEndPoint.Address = convertAddress;
             convertEndPoint.Port = endpoint.Port;
             return convertEndPoint;
