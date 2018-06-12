@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>udpkit</AssemblyName>
+    <RootNamespace>udpkit</RootNamespace>
+	<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);DNC</DefineConstants>
+    <Company>udpkit</Company>
+    <Authors>Fredrik Holmstrom</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
