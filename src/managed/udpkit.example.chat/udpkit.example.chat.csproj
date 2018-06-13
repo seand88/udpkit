@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+	<OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\udpkit.platform.managed\udpkit.platform.managed.csproj" />
+    <ProjectReference Include="..\udpkit\udpkit.csproj" />
+  </ItemGroup>
+
+</Project>
