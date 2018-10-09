@@ -8,6 +8,12 @@
     <Company>udpkit</Company>
     <Authors>Fredrik Holmstrom</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>http://hyrtwol.dk/icons/udpkit.ico</PackageIconUrl>
+    <PackageProjectUrl>https://ci.ontogenesis.com/sites/UdpKit/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Hyrtwol/udpkit/blob/master/license.txt</PackageLicenseUrl>
+    <PackageTags>udp</PackageTags>
+    <RepositoryUrl>ssh://git@bitbucket.ontogenesis.com:7999/unity/udpkit.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
