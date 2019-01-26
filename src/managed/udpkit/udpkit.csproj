@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>udpkit</AssemblyName>
     <RootNamespace>udpkit</RootNamespace>
-	<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+	<TargetFrameworks>netstandard2.0;net471</TargetFrameworks>
     <DefineConstants>$(DefineConstants);DNC</DefineConstants>
     <Company>udpkit</Company>
     <Authors>Fredrik Holmstrom</Authors>
