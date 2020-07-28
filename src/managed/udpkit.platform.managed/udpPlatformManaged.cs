@@ -30,7 +30,7 @@ namespace UdpKit {
     public sealed class UdpPlatformManaged : UdpPlatform {
         Socket socket;
         EndPoint recvEndPoint;
-#if !DNC
+#if !NETSTANDARD
         IPAddress convertAddress;
 #endif
         IPEndPoint convertEndPoint;
@@ -44,7 +44,7 @@ namespace UdpKit {
 
             recvEndPoint = new IPEndPoint(IPAddress.Any, 0);
             convertEndPoint = new IPEndPoint(IPAddress.Any, 0);
-#if !DNC
+#if !NETSTANDARD
             convertAddress = new IPAddress(0L);
 #endif
         }
@@ -79,7 +79,7 @@ namespace UdpKit {
 
         public override bool Close () {
             try {
-#if DNC
+#if NETSTANDARD
                 socket.Dispose();
 #else
                 socket.Close();
@@ -139,7 +139,7 @@ namespace UdpKit {
 #pragma warning disable 618
         UdpEndPoint ConvertEndPoint (IPEndPoint endpoint) {
             long addr;
-#if DNC
+#if NETSTANDARD
             addr = BitConverter.ToUInt32(endpoint.Address.GetAddressBytes(), 0);
 #else
             addr = endpoint.Address.Address;
@@ -148,7 +148,7 @@ namespace UdpKit {
         }
 
         IPEndPoint ConvertEndPoint (UdpEndPoint endpoint) {
-#if DNC
+#if NETSTANDARD
             uint netOrder = (uint)IPAddress.HostToNetworkOrder((int)endpoint.Address.Packed);
             //convertAddress.Address = netOrder;
             var convertAddress = new IPAddress(netOrder);
